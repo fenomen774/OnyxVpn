@@ -64,12 +64,27 @@
       font-size: 1.3rem;
       font-weight: 700;
       letter-spacing: -0.5px;
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.2s;
     }
 
-    .logo img {
+    .logo:hover {
+      opacity: 0.85;
+    }
+
+    .logo-icon {
       width: 34px;
       height: 34px;
+      background: #fff;
+      color: #000;
       border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
     }
 
     nav a {
@@ -247,7 +262,6 @@
       margin-bottom: 12px;
     }
 
-    /* Уведомление при клике на тариф */
     #toast {
       position: fixed;
       bottom: 30px;
@@ -285,13 +299,12 @@
 
   <div class="bg-glow"></div>
 
-  <!-- Навигация -->
+  <!-- Навигация с кликабельным логотипом -->
   <header>
-    <div class="logo">
-      <div style="width: 34px; height: 34px; background: #fff; color: #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800;">O</div>
-
+    <a href="#" class="logo">
+      <div class="logo-icon">O</div>
       <span>OnyxVpn</span>
-    </div>
+    </a>
     <nav>
       <a href="#features">Возможности</a>
       <a href="#pricing">Тарифы</a>
@@ -382,8 +395,6 @@
       
       setTimeout(() => {
         toast.classList.remove('show');
-        // Здесь можно прописать переход на оплату или телеграм-бота, например:
-        // window.location.href = 'https://t.me/ваш_бот';
       }, 3000);
     }
   </script>
