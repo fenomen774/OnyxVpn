@@ -269,7 +269,7 @@
       margin-bottom: 12px;
     }
 
-    /* Личный кабинет (скрыт по умолчанию) */
+    /* Личный кабинет */
     #dashboard-view {
       display: none;
     }
@@ -415,8 +415,8 @@
     </div>
   </header>
 
-  <!-- Главный экран (для гостей) -->
-  <div id="guest-view">
+  <!-- Главный экран -->
+  <div id="main-view">
     <section class="hero">
       <div class="badge">Next-Gen Privacy Protocol</div>
       <h1>Твоя цифровая тень.<br>Быстро. Анонимно. Надежно.</h1>
@@ -449,7 +449,7 @@
     <section class="pricing" id="pricing">
       <h2 class="section-title">Выберите подходящий план</h2>
       <div class="grid">
-        <div class="pricing-card" onclick="selectPlan('План на 1 месяц')">
+        <div class="pricing-card" onclick="selectPlan('План на 1 месяц', 3)">
           <h3>1 Месяц</h3>
           <div class="pricing-price">₽199 <span>/ мес</span></div>
           <ul class="pricing-features">
@@ -457,7 +457,7 @@
             <li>Доступно большинство локаций</li>
           </ul>
         </div>
-        <div class="pricing-card featured" onclick="selectPlan('План на 3 месяца')">
+        <div class="pricing-card featured" onclick="selectPlan('План на 3 месяца', 5)">
           <div class="badge" style="margin-bottom: 10px;">Выгоднее</div>
           <h3>3 Месяца</h3>
           <div class="pricing-price">₽350 <span>/ мес</span></div>
@@ -474,26 +474,28 @@
   <div id="dashboard-view" class="dashboard-section">
     <h2 class="section-title" id="welcome-user">Личный кабинет</h2>
     
-    <div class="grid" style="margin-bottom: 40px;">
-      <div class="card">
-        <h3>Активная подписка</h3>
-        <p style="font-size: 1.2rem; color: #fff; margin-top: 10px;" id="user-plan">План на 1 месяц (Активен)</p>
-        <p style="margin-top: 8px;">Лимит устройств: <span id="device-limit">3</span></p>
-      </div>
-      <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
-        <h3>Управление сессией</h3>
-        <p>Вы авторизованы в системе QuarkVPN.</p>
-        <button class="btn btn-danger" style="margin-top: 20px;" onclick="logout()">Выйти из аккаунта</button>
-      </div>
+    <!-- Секция подписки -->
+    <div class="card" style="margin-bottom: 30px;" id="subscription-card">
+      <!-- Динамический контент подписки / отсутствия -->
     </div>
 
-    <div class="card">
+    <!-- Управление сессией -->
+    <div class="card" style="margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h3>Учетная запись</h3>
+        <p style="color: var(--text-muted); margin-top: 4px;" id="account-email">email@example.com</p>
+      </div>
+      <button class="btn btn-danger" onclick="logout()">Выйти из аккаунта</button>
+    </div>
+
+    <!-- Секция устройств (отображается только при активной подписке) -->
+    <div class="card" id="devices-section" style="display: none;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h3>Подключенные устройства (<span id="device-count">0</span>/<span id="device-max">3</span>)</h3>
         <button class="btn btn-primary" onclick="addDevice()">+ Подключить устройство</button>
       </div>
       <ul class="device-list" id="device-list">
-        <!-- Список устройств будет рендериться здесь -->
+        <!-- Список устройств -->
       </ul>
     </div>
   </div>
@@ -502,7 +504,7 @@
   <div class="modal-overlay" id="auth-modal" onclick="handleModalClick(event)">
     <div class="modal">
       <button class="close-modal" onclick="closeModal()">✕</button>
-      <h2 id="modal-title">Вход в аккаунт</h2>
+      <h2>Вход или регистрация</h2>
       <form id="auth-form" onsubmit="handleAuth(event)">
         <div class="form-group">
           <label>Email</label>
@@ -526,8 +528,9 @@
   </footer>
 
   <script>
-    // Состояние пользователя
-    let currentUser = JSON.parse(localStorage.getItem('quark_user')) || null;
+    // База данных пользователей в localStorage для привязки к почте
+    let usersDB = JSON.parse(localStorage.getItem('quark_users_db')) || {};
+    let currentEmail = localStorage.getItem('quark_current_user') || null;
 
     window.addEventListener('DOMContentLoaded', () => {
       updateUIState();
@@ -547,81 +550,133 @@
 
     function handleAuth(e) {
       e.preventDefault();
-      const email = document.getElementById('auth-email').value;
-      
-      // Создаем пользователя, если его нет
-      currentUser = {
-        email: email,
-        plan: 'План на 1 месяц',
-        limit: 3,
-        devices: [
-          { id: 1, name: 'Мой смартфон (iOS / Android)', added: 'Сегодня' }
-        ]
-      };
+      const email = document.getElementById('auth-email').value.trim().toLowerCase();
 
-      localStorage.setItem('quark_user', JSON.stringify(currentUser));
+      // Если пользователя с такой почтой еще нет в "базе", регистрируем с нуля (без подписки)
+      if (!usersDB[email]) {
+        usersDB[email] = {
+          email: email,
+          subscription: null, // изначально подписки нет
+          devices: []
+        };
+        saveDB();
+        showToast('Аккаунт успешно создан!');
+      } else {
+        showToast('Успешный вход в систему!');
+      }
+
+      currentEmail = email;
+      localStorage.setItem('quark_current_user', currentEmail);
       closeModal();
       updateUIState();
-      showToast('Успешный вход в личный кабинет!');
     }
 
     function logout() {
-      localStorage.removeItem('quark_user');
-      currentUser = null;
+      currentEmail = null;
+      localStorage.removeItem('quark_current_user');
       updateUIState();
       showToast('Вы вышли из аккаунта');
     }
 
+    function saveDB() {
+      localStorage.setItem('quark_users_db', JSON.stringify(usersDB));
+    }
+
     function updateUIState() {
       const authContainer = document.getElementById('auth-nav-container');
-      const guestView = document.getElementById('guest-view');
+      const mainView = document.getElementById('main-view');
       const dashboardView = document.getElementById('dashboard-view');
 
-      if (currentUser) {
+      if (currentEmail && usersDB[currentEmail]) {
+        const user = usersDB[currentEmail];
         authContainer.innerHTML = `<button class="btn btn-outline" onclick="scrollToDashboard()">Личный кабинет</button>`;
-        guestView.style.display = 'none';
-        dashboardView.style.display = 'block';
+        mainView.style.display = 'block'; // Главная видна, чтобы можно было докупить тариф
+        dashboardView.style.display = 'block'; // И личный кабинет тоже виден
 
-        document.getElementById('welcome-user').textContent = `Привет, ${currentUser.email}`;
-        document.getElementById('user-plan').textContent = `${currentUser.plan} (Активен)`;
-        document.getElementById('device-limit').textContent = currentUser.limit;
-        document.getElementById('device-max').textContent = currentUser.limit;
-        
-        renderDevices();
+        document.getElementById('welcome-user').textContent = `Личный кабинет: ${user.email}`;
+        document.getElementById('account-email').textContent = user.email;
+
+        renderSubscriptionSection(user);
       } else {
         authContainer.innerHTML = `<button class="btn btn-primary" onclick="openModal()">Войти / Регистрация</button>`;
-        guestView.style.display = 'block';
+        mainView.style.display = 'block';
         dashboardView.style.display = 'none';
       }
     }
 
     function scrollToDashboard() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.getElementById('dashboard-view').scrollIntoView({ behavior: 'smooth' });
     }
 
-    function selectPlan(planName) {
-      if (!currentUser) {
-        showToast('Пожалуйста, войдите в аккаунт для выбора тарифа');
+    // Обработка покупки / выбора тарифа
+    function selectPlan(planName, limit) {
+      if (!currentEmail || !usersDB[currentEmail]) {
+        showToast('Пожалуйста, войдите в аккаунт или зарегистрируйтесь');
         openModal();
         return;
       }
-      currentUser.plan = planName;
-      currentUser.limit = planName.includes('3 месяца') ? 5 : 3;
-      localStorage.setItem('quark_user', JSON.stringify(currentUser));
+
+      // Привязываем подписку к текущей почте
+      usersDB[currentEmail].subscription = {
+        name: planName,
+        limit: limit,
+        active: true
+      };
+      saveDB();
       updateUIState();
-      showToast(`Выбран тариф: ${planName}`);
+      showToast(`Тариф «${planName}» успешно активирован!`);
+      
+      // Скроллим в личный кабинет
+      scrollToDashboard();
     }
 
-    function renderDevices() {
+    // Рендер блока подписки (есть или нет)
+    function renderSubscriptionSection(user) {
+      const subCard = document.getElementById('subscription-card');
+      const devicesSection = document.getElementById('devices-section');
+
+      if (!user.subscription || !user.subscription.active) {
+        // У пользователя НЕТ подписки
+        subCard.innerHTML = `
+          <div style="text-align: center; padding: 20px 0;">
+            <h3 style="margin-bottom: 10px; color: #ff6b6b;">Активная подписка отсутствует</h3>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">Для подключения устройств и доступа к защищенным серверам выберите подходящий тариф.</p>
+            <a href="#pricing" class="btn btn-primary">Перейти к покупке тарифа</a>
+          </div>
+        `;
+        devicesSection.style.display = 'none';
+      } else {
+        // У пользователя ЕСТЬ подписка
+        subCard.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div>
+              <span class="badge" style="margin-bottom: 8px; color: #4cd137; border-color: rgba(76,209,55,0.3);">Подписка активна</span>
+              <h3>${user.subscription.name}</h3>
+              <p style="color: var(--text-muted); margin-top: 4px;">Доступно устройств: ${user.subscription.limit}</p>
+            </div>
+            <button class="btn btn-outline" onclick="scrollToPricing()">Сменить тариф</button>
+          </div>
+        `;
+        devicesSection.style.display = 'block';
+        renderDevices(user);
+      }
+    }
+
+    function scrollToPricing() {
+      document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function renderDevices(user) {
       const listEl = document.getElementById('device-list');
-      document.getElementById('device-count').textContent = currentUser.devices.length;
+      document.getElementById('device-count').textContent = user.devices.length;
+      document.getElementById('device-max').textContent = user.subscription.limit;
       
-      if (currentUser.devices.length === 0) {
-        listEl.innerHTML = `<li style="color: var(--text-muted); text-align: center; padding: 20px;">Нет подключенных устройств</li>`;
+      if (user.devices.length === 0) {
+        listEl.innerHTML = `<li style="color: var(--text-muted); text-align: center; padding: 20px;">Устройства еще не подключены</li>`;
         return;
       }
 
-      listEl.innerHTML = currentUser.devices.map((dev, index) => `
+      listEl.innerHTML = user.devices.map((dev, index) => `
         <li class="device-item">
           <div>
             <strong>${dev.name}</strong>
@@ -633,29 +688,30 @@
     }
 
     function addDevice() {
-      if (currentUser.devices.length >= currentUser.limit) {
+      const user = usersDB[currentEmail];
+      if (user.devices.length >= user.subscription.limit) {
         showToast('Достигнут лимит устройств для вашего тарифа!');
         return;
       }
 
-      const deviceNames = ['Ноутбук (Windows / Mac)', 'Планшет', 'Второй смартфон', 'Домашний роутер'];
-      const nextName = deviceNames[currentUser.devices.length % deviceNames.length];
+      const deviceNames = ['Смартфон (iOS / Android)', 'Ноутбук (Windows / Mac)', 'Планшет', 'Роутер'];
+      const nextName = deviceNames[user.devices.length % deviceNames.length];
 
-      currentUser.devices.push({
-        id: Date.now(),
+      user.devices.push({
         name: nextName,
         added: 'Только что'
       });
 
-      localStorage.setItem('quark_user', JSON.stringify(currentUser));
-      renderDevices();
+      saveDB();
+      renderDevices(user);
       showToast('Устройство успешно подключено!');
     }
 
     function removeDevice(index) {
-      currentUser.devices.splice(index, 1);
-      localStorage.setItem('quark_user', JSON.stringify(currentUser));
-      renderDevices();
+      const user = usersDB[currentEmail];
+      user.devices.splice(index, 1);
+      saveDB();
+      renderDevices(user);
       showToast('Устройство отвязано от подписки');
     }
 
