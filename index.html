@@ -129,6 +129,11 @@
       background: var(--card-bg);
     }
 
+    .auth-buttons-group {
+      display: flex;
+      gap: 10px;
+    }
+
     .hero {
       text-align: center;
       padding: 100px 8% 80px;
@@ -338,6 +343,19 @@
       cursor: pointer;
     }
 
+    .switch-auth-text {
+      text-align: center;
+      margin-top: 16px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .switch-auth-text span {
+      color: #fff;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
     #toast {
       position: fixed;
       bottom: 30px;
@@ -386,7 +404,10 @@
       <a href="index.html#pricing">Тарифы</a>
     </nav>
     <div id="auth-nav-container">
-      <button class="btn btn-primary" onclick="openModal()">Войти / Регистрация</button>
+      <div class="auth-buttons-group">
+        <button class="btn btn-outline" onclick="openModal('login')">Войти</button>
+        <button class="btn btn-primary" onclick="openModal('register')">Регистрация</button>
+      </div>
     </div>
   </header>
 
@@ -447,9 +468,10 @@
   <div class="modal-overlay" id="auth-modal" onclick="handleModalClick(event)">
     <div class="modal">
       <button class="close-modal" onclick="closeModal()">✕</button>
-      <h2>Вход или регистрация</h2>
-      <p class="modal-subtitle">Введите email, чтобы войти в аккаунт или зарегистрироваться автоматически.</p>
-      <form id="auth-form" onsubmit="handleAuth(event)">
+      <h2 id="modal-heading">Вход в аккаунт</h2>
+      <p class="modal-subtitle" id="modal-subtext">Введите данные для входа в систему</p>
+      
+      <form id="auth-form" onsubmit="handleAuthSubmit(event)">
         <div class="form-group">
           <label>Email</label>
           <input type="email" id="auth-email" class="form-control" placeholder="name@example.com" required>
@@ -458,8 +480,12 @@
           <label>Пароль</label>
           <input type="password" id="auth-password" class="form-control" placeholder="••••••••" required>
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Продолжить</button>
+        <button type="submit" id="modal-submit-btn" class="btn btn-primary" style="width: 100%;">Войти</button>
       </form>
+
+      <div class="switch-auth-text" id="switch-text">
+        Нет аккаунта? <span onclick="toggleAuthMode()">Зарегистрироваться</span>
+      </div>
     </div>
   </div>
 
@@ -472,12 +498,15 @@
   <script>
     let usersDB = JSON.parse(localStorage.getItem('quark_users_db')) || {};
     let currentEmail = localStorage.getItem('quark_current_user') || null;
+    let currentMode = 'login'; // 'login' или 'register'
 
     window.addEventListener('DOMContentLoaded', () => {
       updateUIState();
     });
 
-    function openModal() {
+    function openModal(mode) {
+      currentMode = mode;
+      updateModalView();
       document.getElementById('auth-modal').classList.add('active');
     }
 
@@ -489,21 +518,55 @@
       if (e.target.id === 'auth-modal') closeModal();
     }
 
-    function handleAuth(e) {
+    function toggleAuthMode() {
+      currentMode = currentMode === 'login' ? 'register' : 'login';
+      updateModalView();
+    }
+
+    function updateModalView() {
+      const heading = document.getElementById('modal-heading');
+      const subtext = document.getElementById('modal-subtext');
+      const submitBtn = document.getElementById('modal-submit-btn');
+      const switchText = document.getElementById('switch-text');
+
+      if (currentMode === 'login') {
+        heading.textContent = 'Вход в аккаунт';
+        subtext.textContent = 'Введите ваш email и пароль';
+        submitBtn.textContent = 'Войти';
+        switchText.innerHTML = 'Нет аккаунта? <span onclick="toggleAuthMode()">Зарегистрироваться</span>';
+      } else {
+        heading.textContent = 'Регистрация';
+        subtext.textContent = 'Создайте новый аккаунт QuarkVPN';
+        submitBtn.textContent = 'Зарегистрироваться';
+        switchText.innerHTML = 'Уже есть аккаунт? <span onclick="toggleAuthMode()">Войти</span>';
+      }
+    }
+
+    function handleAuthSubmit(e) {
       e.preventDefault();
       const email = document.getElementById('auth-email').value.trim().toLowerCase();
 
-      // Если аккаунта с такой почтой нет, регистрируем его с нуля
-      if (!usersDB[email]) {
-        usersDB[email] = { 
-          email: email, 
-          subscription: null, // изначально подписки нет
-          devices: [] 
-        };
+      if (currentMode === 'login') {
+        // Пытаемся войти
+        if (!usersDB[email]) {
+          showToast('Аккаунт с такой почтой не найден!');
+          // Переключаем на регистрацию, чтобы помочь пользователю
+          currentMode = 'register';
+          updateModalView();
+          return;
+        }
+        showToast('Вход выполнен успешно!');
+      } else {
+        // Регистрация
+        if (usersDB[email]) {
+          showToast('Этот email уже зарегистрирован! Войдите.');
+          currentMode = 'login';
+          updateModalView();
+          return;
+        }
+        usersDB[email] = { email: email, subscription: null, devices: [] };
         localStorage.setItem('quark_users_db', JSON.stringify(usersDB));
         showToast('Аккаунт успешно создан!');
-      } else {
-        showToast('Вход выполнен успешно!');
       }
 
       currentEmail = email;
@@ -517,14 +580,19 @@
       if (currentEmail) {
         authContainer.innerHTML = `<a href="dashboard.html" class="btn btn-outline">Личный кабинет</a>`;
       } else {
-        authContainer.innerHTML = `<button class="btn btn-primary" onclick="openModal()">Войти / Регистрация</button>`;
+        authContainer.innerHTML = `
+          <div class="auth-buttons-group">
+            <button class="btn btn-outline" onclick="openModal('login')">Войти</button>
+            <button class="btn btn-primary" onclick="openModal('register')">Регистрация</button>
+          </div>
+        `;
       }
     }
 
     function goToPay(planName, price, limit) {
       if (!currentEmail) {
         showToast('Сначала войдите или зарегистрируйтесь!');
-        openModal();
+        openModal('login');
         return;
       }
       localStorage.setItem('quark_selected_plan', JSON.stringify({ name: planName, price: price, limit: limit }));
