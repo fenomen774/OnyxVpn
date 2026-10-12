@@ -186,6 +186,19 @@
       gap: 24px;
     }
 
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    /* Изменили минимальную ширину колонок для карточек тарифов, чтобы они встали в одну строку */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
     .card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -216,7 +229,7 @@
 
     .pricing {
       padding: 80px 8%;
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
     }
 
@@ -224,7 +237,7 @@
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 20px;
-      padding: 50px 40px;
+      padding: 40px 30px;
       text-align: center;
       position: relative;
       cursor: pointer;
@@ -247,13 +260,13 @@
     }
 
     .pricing-price {
-      font-size: 2.8rem;
+      font-size: 2.4rem;
       font-weight: 800;
       margin: 20px 0;
     }
 
     .pricing-price span {
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: var(--text-muted);
       font-weight: 400;
     }
@@ -262,11 +275,11 @@
       list-style: none;
       margin-top: 10px;
       color: var(--text-muted);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
 
     .pricing-features li {
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     /* Модальное окно */
@@ -383,7 +396,8 @@
       font-size: 0.9rem;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
+      .pricing-grid { grid-template-columns: 1fr; }
       .hero h1 { font-size: 2.4rem; }
       nav { display: none; }
     }
@@ -421,7 +435,7 @@
   <!-- Преимущества -->
   <section class="features" id="features">
     <h2 class="section-title">Почему именно QuarkVPN</h2>
-    <div class="grid">
+    <div class="features-grid">
       <div class="card">
         <div class="card-icon">⚡</div>
         <h3>До 10 Гбит/с</h3>
@@ -440,10 +454,10 @@
     </div>
   </section>
 
-  <!-- Тарифы -->
+  <!-- Тарифы (в одну строку) -->
   <section class="pricing" id="pricing">
     <h2 class="section-title">Выберите подходящий план</h2>
-    <div class="grid">
+    <div class="pricing-grid">
       
       <!-- Карточка 1: 1 месяц -->
       <div class="pricing-card" onclick="goToPay('1 месяц', 199, 3)">
@@ -451,7 +465,7 @@
         <div class="pricing-price">₽199 <span>/ мес</span></div>
         <ul class="pricing-features">
           <li>До 3 устройств</li>
-          <li>Доступно большинство локаций</li>
+          <li>Большинство локаций</li>
         </ul>
       </div>
 
@@ -462,18 +476,18 @@
         <div class="pricing-price">₽350 <span>/ мес</span></div>
         <ul class="pricing-features">
           <li>До 5 устройств</li>
-          <li>Доступно большинство локаций</li>
+          <li>Большинство локаций</li>
         </ul>
       </div>
 
       <!-- Карточка 3: 6 месяцев -->
       <div class="pricing-card featured" onclick="goToPay('6 месяцев', 800, 10)">
-        <div class="badge" style="margin-bottom: 10px; background: rgba(76,209,55,0.1); color: #4cd137; border-color: rgba(76,209,55,0.3);">Максимальная выгода</div>
+        <div class="badge" style="margin-bottom: 10px; background: rgba(76,209,55,0.1); color: #4cd137; border-color: rgba(76,209,55,0.3);">Максимум</div>
         <h3>6 Месяцев</h3>
-        <div class="pricing-price">₽800 <span>/ весь период</span></div>
+        <div class="pricing-price">₽800 <span>/ период</span></div>
         <ul class="pricing-features">
           <li>До 10 устройств</li>
-          <li>Максимальная скорость и все локации</li>
+          <li>Все локации и скорость</li>
         </ul>
       </div>
 
