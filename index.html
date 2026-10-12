@@ -191,7 +191,7 @@
       border: 1px solid var(--card-border);
       border-radius: 16px;
       padding: 32px;
-      transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.3s ease, border-color 0.3s ease;
     }
 
     .card:hover {
@@ -220,12 +220,12 @@
       margin: 0 auto;
     }
 
-    /* Динамические карточки тарифов с эффектом увеличения */
+    /* Динамические карточки тарифов */
     .pricing-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 20px;
-      padding: 40px;
+      padding: 50px 40px;
       text-align: center;
       position: relative;
       cursor: pointer;
@@ -261,7 +261,7 @@
 
     .pricing-features {
       list-style: none;
-      margin-bottom: 30px;
+      margin-top: 10px;
       color: var(--text-muted);
       font-size: 0.95rem;
     }
@@ -354,7 +354,7 @@
     </div>
   </section>
 
-  <!-- Тарифы (клик по всей плашке) -->
+  <!-- Тарифы -->
   <section class="pricing" id="pricing">
     <h2 class="section-title">Выберите подходящий план</h2>
     <div class="grid">
@@ -368,7 +368,6 @@
           <li>Базовые локации</li>
           <li>Стандартная поддержка</li>
         </ul>
-        <div class="btn btn-outline" style="width: 100%; pointer-events: none;">Выбрать</div>
       </div>
 
       <!-- Карточка 2 -->
@@ -381,7 +380,6 @@
           <li>Все премиум-локации</li>
           <li>Приоритетный доступ 24/7</li>
         </ul>
-        <div class="btn btn-primary" style="width: 100%; pointer-events: none;">Подключить план</div>
       </div>
 
     </div>
