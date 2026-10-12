@@ -444,6 +444,8 @@
   <section class="pricing" id="pricing">
     <h2 class="section-title">Выберите подходящий план</h2>
     <div class="grid">
+      
+      <!-- Карточка 1: 1 месяц -->
       <div class="pricing-card" onclick="goToPay('1 месяц', 199, 3)">
         <h3>1 Месяц</h3>
         <div class="pricing-price">₽199 <span>/ мес</span></div>
@@ -452,7 +454,9 @@
           <li>Доступно большинство локаций</li>
         </ul>
       </div>
-      <div class="pricing-card featured" onclick="goToPay('3 месяца', 350, 5)">
+
+      <!-- Карточка 2: 3 месяца -->
+      <div class="pricing-card" onclick="goToPay('3 месяца', 350, 5)">
         <div class="badge" style="margin-bottom: 10px;">Выгоднее</div>
         <h3>3 Месяца</h3>
         <div class="pricing-price">₽350 <span>/ мес</span></div>
@@ -461,6 +465,18 @@
           <li>Доступно большинство локаций</li>
         </ul>
       </div>
+
+      <!-- Карточка 3: 6 месяцев -->
+      <div class="pricing-card featured" onclick="goToPay('6 месяцев', 800, 10)">
+        <div class="badge" style="margin-bottom: 10px; background: rgba(76,209,55,0.1); color: #4cd137; border-color: rgba(76,209,55,0.3);">Максимальная выгода</div>
+        <h3>6 Месяцев</h3>
+        <div class="pricing-price">₽800 <span>/ весь период</span></div>
+        <ul class="pricing-features">
+          <li>До 10 устройств</li>
+          <li>Максимальная скорость и все локации</li>
+        </ul>
+      </div>
+
     </div>
   </section>
 
@@ -494,10 +510,11 @@
   <footer>
     <p>© 2026 QuarkVPN. Все права защищены. Безопасность превыше всего.</p>
   </footer>
-      <script>
+
+  <script>
     let usersDB = JSON.parse(localStorage.getItem('quark_users_db')) || {};
     let currentEmail = localStorage.getItem('quark_current_user') || null;
-    let currentMode = 'login'; // 'login' или 'register'
+    let currentMode = 'login';
 
     window.addEventListener('DOMContentLoaded', () => {
       updateUIState();
@@ -547,24 +564,20 @@
       const password = document.getElementById('auth-password').value;
 
       if (currentMode === 'login') {
-        // 1. Проверяем, существует ли аккаунт
         if (!usersDB[email]) {
           showToast('Ошибка: аккаунт не найден!');
           return;
         }
-        // 2. Проверяем, верный ли пароль для существующей почты
         if (usersDB[email].password !== password) {
           showToast('Ошибка: неверный пароль!');
           return;
         }
         showToast('Вход выполнен успешно!');
       } else {
-        // Регистрация: проверяем, занята ли почта
         if (usersDB[email]) {
           showToast('Ошибка: этот email уже зарегистрирован!');
           return;
         }
-        // Создаем нового пользователя
         usersDB[email] = { 
           email: email, 
           password: password, 
