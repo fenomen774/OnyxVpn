@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Оплата подписки — QuarkVPN</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090a0f;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-muted: #8e95a5;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body { background-color: var(--bg); color: #fff; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
+
+    header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 24px 8%; border-bottom: 1px solid var(--card-border);
+    }
+
+    .logo { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 700; color: #fff; text-decoration: none; }
+    .logo-icon { width: 34px; height: 34px; background: #fff; color: #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+
+    .pay-container { max-width: 500px; margin: 60px auto; padding: 40px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; width: 90%; }
+    h2 { margin-bottom: 20px; font-size: 1.8rem; }
+    .order-info { margin-bottom: 30px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid var(--card-border); }
+    .order-info p { color: var(--text-muted); margin-bottom: 8px; }
+    .order-info strong { color: #fff; font-size: 1.2rem; }
+
+    .btn { padding: 12px 24px; border-radius: 30px; text-decoration: none; font-weight: 600; display: block; width: 100%; text-align: center; cursor: pointer; border: none; font-size: 1rem; transition: 0.3s; }
+    .btn-primary { background: #fff; color: #000; margin-bottom: 15px; }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-2px); }
+    .btn-outline { border: 1px solid var(--card-border); color: #fff; background: transparent; }
+    .btn-outline:hover { background: rgba(255,255,255,0.05); }
+
+    footer { border-top: 1px solid var(--card-border); padding: 30px 8%; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="logo">
+      <div class="logo-icon">Q</div>
+      <span>QuarkVPN</span>
+    </a>
+    <a href="index.html" class="btn btn-outline" style="width: auto; padding: 8px 18px; font-size: 0.9rem;">На главную</a>
+  </header>
+
+  <div class="pay-container">
+    <h2>Оплата заказа</h2>
+    <div class="order-info" id="order-details">
+      <p>Выбранный тариф:</p>
+      <strong id="plan-title">Загрузка...</strong>
+      <p style="margin-top: 15px;">К оплате:</p>
+      <strong id="plan-price" style="font-size: 1.5rem; color: #4cd137;">0 ₽</strong>
+    </div>
+
+    <button class="btn btn-primary" onclick="completePayment()">Оплатить банковской картой</button>
+    <a href="index.html" class="btn btn-outline">Отменить и вернуться назад</a>
+  </div>
+
+  <footer>
+    <p>© 2026 QuarkVPN. Безопасные платежи.</p>
+  </footer>
+
+  <script>
+    const planData = JSON.parse(localStorage.getItem('quark_selected_plan'));
+    const currentEmail = localStorage.getItem('quark_current_user');
+
+    if (!planData || !currentEmail) {
+      window.location.href = 'index.html';
+    } else {
+      document.getElementById('plan-title').textContent = planData.name;
+      document.getElementById('plan-price').textContent = planData.price + ' ₽';
+    }
+
+    function completePayment() {
+      let usersDB = JSON.parse(localStorage.getItem('quark_users_db')) || {};
+      if (usersDB[currentEmail]) {
+        usersDB[currentEmail].subscription = {
+          name: planData.name,
+          limit: planData.limit,
+          active: true
+        };
+        localStorage.setItem('quark_users_db', JSON.stringify(usersDB));
+      }
+
+      // Перенаправляем в личный кабинет после успешной имитации оплаты
+      window.location.href = 'dashboard.html';
+    }
+  </script>
+</body>
+</html>
