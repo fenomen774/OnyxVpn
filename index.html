@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OnyxVpn — Абсолютная приватность и скорость</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090a0f;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent: #ffffff;
+      --text-muted: #8e95a5;
+      --gradient-silver: linear-gradient(135deg, #ffffff 0%, #a6afb8 50%, #4b5563 100%);
+      --glow: rgba(255, 255, 255, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: #fff;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    .bg-glow {
+      position: absolute;
+      top: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(160, 175, 200, 0.12) 0%, rgba(9, 10, 15, 0) 70%);
+      z-index: -1;
+      filter: blur(80px);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 8%;
+      border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .logo img {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      margin: 0 16px;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: #fff;
+    }
+
+    .btn {
+      padding: 10px 24px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      display: inline-block;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: #fff;
+      color: #000;
+      box-shadow: 0 0 20px var(--glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-outline {
+      border: 1px solid var(--card-border);
+      color: #fff;
+      background: var(--card-bg);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .hero {
+      text-align: center;
+      padding: 100px 8% 80px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 24px;
+      background: var(--gradient-silver);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      margin-bottom: 36px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .features {
+      padding: 80px 8%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 50px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 32px;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+
+    .card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .pricing {
+      padding: 80px 8%;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .pricing-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      position: relative;
+    }
+
+    .pricing-card.featured {
+      border-color: rgba(255, 255, 255, 0.4);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.05);
+    }
+
+    .pricing-price {
+      font-size: 2.8rem;
+      font-weight: 800;
+      margin: 20px 0;
+    }
+
+    .pricing-price span {
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .pricing-features {
+      list-style: none;
+      margin-bottom: 30px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .pricing-features li {
+      margin-bottom: 12px;
+    }
+
+    /* Уведомление при клике на тариф */
+    #toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #ffffff;
+      color: #000;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transform: translateY(150px);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+    }
+
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 40px 8%;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.4rem; }
+      nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-glow"></div>
+
+  <!-- Навигация -->
+  <header>
+    <div class="logo">
+      <img src="Unknown-2.png" alt="OnyxVpn Logo">
+      <span>OnyxVpn</span>
+    </div>
+    <nav>
+      <a href="#features">Возможности</a>
+      <a href="#pricing">Тарифы</a>
+      <a href="#support">Поддержка</a>
+    </nav>
+    <button class="btn btn-primary" onclick="scrollToPricing()">Подключить</button>
+  </header>
+
+  <!-- Главный баннер -->
+  <section class="hero">
+    <div class="badge">Next-Gen Privacy Protocol</div>
+    <h1>Твоя цифровая тень.<br>Быстро. Анонимно. Надежно.</h1>
+    <p>OnyxVpn шифрует трафик с использованием современных протоколов нового поколения (VLESS / WireGuard). Полное отсутствие логов и максимальная пропускная способность.</p>
+    <div class="hero-buttons">
+      <button class="btn btn-primary" onclick="selectPlan('Тестовый период (1 день)')">Попробовать бесплатно</button>
+      <a href="#features" class="btn btn-outline">Узнать больше</a>
+    </div>
+  </section>
+
+  <!-- Преимущества -->
+  <section class="features" id="features">
+    <h2 class="section-title">Почему именно Onyx</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>До 10 Гбит/с</h3>
+        <p>Выделенные высокоскоростные серверы без троттлинга и ограничений по трафику.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🛡️</div>
+        <h3>Zero-Logs Политика</h3>
+        <p>Мы не собираем, не логируем и физически не храним информацию о ваших сессиях.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <h3>Обход любых блокировок</h3>
+        <p>Маскировка под обычный HTTPS трафик, что делает подключение невидимым для фильтрации провайдера.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Тарифы -->
+  <section class="pricing" id="pricing">
+    <h2 class="section-title">Выберите подходящий план</h2>
+    <div class="grid">
+      <div class="pricing-card">
+        <h3>1 Месяц</h3>
+        <div class="pricing-price">₽199 <span>/ мес</span></div>
+        <ul class="pricing-features">
+          <li>До 3 устройств</li>
+          <li>Базовые локации</li>
+          <li>Стандартная поддержка</li>
+        </ul>
+        <button class="btn btn-outline" style="width: 100%;" onclick="selectPlan('План на 1 месяц')">Выбрать</button>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="badge" style="margin-bottom: 10px;">Выбор большинства</div>
+        <h3>1 Год</h3>
+        <div class="pricing-price">₽129 <span>/ мес</span></div>
+        <ul class="pricing-features">
+          <li>До 10 устройств</li>
+          <li>Все премиум-локации</li>
+          <li>Приоритетный доступ 24/7</li>
+        </ul>
+        <button class="btn btn-primary" style="width: 100%;" onclick="selectPlan('План на 1 год (Премиум)')">Подключить план</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Всплывающее уведомление -->
+  <div id="toast">Тариф выбран! Перенаправление на оплату...</div>
+
+  <!-- Футер -->
+  <footer>
+    <p>© 2026 OnyxVpn. Все права защищены. Безопасность превыше всего.</p>
+  </footer>
+
+  <script>
+    function scrollToPricing() {
+      document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function selectPlan(planName) {
+      const toast = document.getElementById('toast');
+      toast.textContent = `Выбран: ${planName}. Перенаправление...`;
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+        // Здесь можно прописать переход на оплату или телеграм-бота, например:
+        // window.location.href = 'https://t.me/ваш_бот';
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>
