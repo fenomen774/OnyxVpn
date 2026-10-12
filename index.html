@@ -261,7 +261,7 @@
     }
 
     .pricing-features li {
-      margin-bottom:  12px;
+      margin-bottom: 12px;
     }
 
     /* Модальное окно */
@@ -295,8 +295,14 @@
     }
 
     .modal h2 {
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       font-size: 1.5rem;
+    }
+
+    .modal-subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
     }
 
     .form-group {
@@ -437,11 +443,12 @@
     </div>
   </section>
 
-  <!-- Модальное окно авторизации -->
+  <!-- Модальное окно авторизации/регистрации -->
   <div class="modal-overlay" id="auth-modal" onclick="handleModalClick(event)">
     <div class="modal">
       <button class="close-modal" onclick="closeModal()">✕</button>
       <h2>Вход или регистрация</h2>
+      <p class="modal-subtitle">Введите email, чтобы войти в аккаунт или зарегистрироваться автоматически.</p>
       <form id="auth-form" onsubmit="handleAuth(event)">
         <div class="form-group">
           <label>Email</label>
@@ -486,12 +493,17 @@
       e.preventDefault();
       const email = document.getElementById('auth-email').value.trim().toLowerCase();
 
+      // Если аккаунта с такой почтой нет, регистрируем его с нуля
       if (!usersDB[email]) {
-        usersDB[email] = { email: email, subscription: null, devices: [] };
+        usersDB[email] = { 
+          email: email, 
+          subscription: null, // изначально подписки нет
+          devices: [] 
+        };
         localStorage.setItem('quark_users_db', JSON.stringify(usersDB));
         showToast('Аккаунт успешно создан!');
       } else {
-        showToast('Успешный вход в систему!');
+        showToast('Вход выполнен успешно!');
       }
 
       currentEmail = email;
@@ -511,11 +523,10 @@
 
     function goToPay(planName, price, limit) {
       if (!currentEmail) {
-        showToast('Сначала войдите в аккаунт!');
+        showToast('Сначала войдите или зарегистрируйтесь!');
         openModal();
         return;
       }
-      // Передаем выбранный тариф через localStorage на страницу оплаты
       localStorage.setItem('quark_selected_plan', JSON.stringify({ name: planName, price: price, limit: limit }));
       window.location.href = 'pay.html';
     }
