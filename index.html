@@ -494,8 +494,7 @@
   <footer>
     <p>© 2026 QuarkVPN. Все права защищены. Безопасность превыше всего.</p>
   </footer>
-
-  <script>
+    <script>
     let usersDB = JSON.parse(localStorage.getItem('quark_users_db')) || {};
     let currentEmail = localStorage.getItem('quark_current_user') || null;
     let currentMode = 'login'; // 'login' или 'register'
@@ -548,24 +547,24 @@
       const password = document.getElementById('auth-password').value;
 
       if (currentMode === 'login') {
-        // Ошибка: аккаунт не найден, без автоматической регистрации
+        // Если аккаунта нет — просто выводим ошибку, НЕ перекидываем никуда автоматически
         if (!usersDB[email]) {
-          showToast('Ошибка: аккаунт с такой почтой не найден!');
+          showToast('Ошибка: аккаунт не найден. Зарегистрируйтесь!');
           return;
         }
-        // Ошибка: неверный пароль
+        // Проверка пароля
         if (usersDB[email].password !== password) {
           showToast('Ошибка: неверный пароль!');
           return;
         }
         showToast('Вход выполнен успешно!');
       } else {
-        // Ошибка: почта уже занята
+        // Регистрация: если почта уже занята — выводим ошибку
         if (usersDB[email]) {
           showToast('Ошибка: этот email уже зарегистрирован!');
           return;
         }
-        // Успешная регистрация
+        // Создаем нового пользователя
         usersDB[email] = { 
           email: email, 
           password: password, 
