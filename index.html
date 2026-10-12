@@ -128,10 +128,6 @@
       background: var(--card-bg);
     }
 
-    .btn-outline:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
     .hero {
       text-align: center;
       padding: 100px 8% 80px;
@@ -195,7 +191,7 @@
       border: 1px solid var(--card-border);
       border-radius: 16px;
       padding: 32px;
-      transition: transform 0.3s, border-color 0.3s;
+      transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
     }
 
     .card:hover {
@@ -224,6 +220,7 @@
       margin: 0 auto;
     }
 
+    /* Динамические карточки тарифов с эффектом увеличения */
     .pricing-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -231,12 +228,23 @@
       padding: 40px;
       text-align: center;
       position: relative;
+      cursor: pointer;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+                  border-color 0.35s ease, 
+                  box-shadow 0.35s ease, 
+                  background 0.35s ease;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 255, 255, 0.08);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
     }
 
     .pricing-card.featured {
-      border-color: rgba(255, 255, 255, 0.4);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
-      box-shadow: 0 0 40px rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.3);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
     }
 
     .pricing-price {
@@ -299,7 +307,7 @@
 
   <div class="bg-glow"></div>
 
-  <!-- Навигация с кликабельным логотипом -->
+  <!-- Навигация -->
   <header>
     <a href="#" class="logo">
       <div class="logo-icon">O</div>
@@ -346,11 +354,13 @@
     </div>
   </section>
 
-  <!-- Тарифы -->
+  <!-- Тарифы (клик по всей плашке) -->
   <section class="pricing" id="pricing">
     <h2 class="section-title">Выберите подходящий план</h2>
     <div class="grid">
-      <div class="pricing-card">
+      
+      <!-- Карточка 1 -->
+      <div class="pricing-card" onclick="selectPlan('План на 1 месяц')">
         <h3>1 Месяц</h3>
         <div class="pricing-price">₽199 <span>/ мес</span></div>
         <ul class="pricing-features">
@@ -358,10 +368,11 @@
           <li>Базовые локации</li>
           <li>Стандартная поддержка</li>
         </ul>
-        <button class="btn btn-outline" style="width: 100%;" onclick="selectPlan('План на 1 месяц')">Выбрать</button>
+        <div class="btn btn-outline" style="width: 100%; pointer-events: none;">Выбрать</div>
       </div>
 
-      <div class="pricing-card featured">
+      <!-- Карточка 2 -->
+      <div class="pricing-card featured" onclick="selectPlan('План на 1 год (Премиум)')">
         <div class="badge" style="margin-bottom: 10px;">Выбор большинства</div>
         <h3>1 Год</h3>
         <div class="pricing-price">₽129 <span>/ мес</span></div>
@@ -370,8 +381,9 @@
           <li>Все премиум-локации</li>
           <li>Приоритетный доступ 24/7</li>
         </ul>
-        <button class="btn btn-primary" style="width: 100%;" onclick="selectPlan('План на 1 год (Премиум)')">Подключить план</button>
+        <div class="btn btn-primary" style="width: 100%; pointer-events: none;">Подключить план</div>
       </div>
+
     </div>
   </section>
 
