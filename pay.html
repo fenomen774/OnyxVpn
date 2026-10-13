@@ -3,96 +3,2247 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Оплата подписки — QuarkVPN</title>
+  <title>Оплата — QuarkVPN</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <script>document.documentElement.className += ' js';</script>
   <style>
     :root {
-      --bg: #090a0f;
-      --card-bg: rgba(255, 255, 255, 0.03);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --text-muted: #8e95a5;
+      --bg: #07080b;
+      --panel: #0d0f15;
+      --panel-2: #10131a;
+      --line: rgba(255, 255, 255, 0.08);
+      --line-strong: rgba(255, 255, 255, 0.16);
+      --text: #edeff3;
+      --muted: #8b93a5;
+      --accent: #c8ff4d;
+      --accent-ink: #0a0c10;
+      --danger: #ff8585;
+      --font-head: 'Space Grotesk', 'Inter', sans-serif;
+      --font-text: 'Inter', sans-serif;
+      --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+      --radius: 16px;
+      --radius-lg: 24px;
+      --z-header: 100;
+      --z-mobile-menu: 90;
+      --z-overlay: 1000;
+      --z-toast: 1100;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background-color: var(--bg); color: #fff; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
+    html { scroll-behavior: smooth; }
 
-    header {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 24px 8%; border-bottom: 1px solid var(--card-border);
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
     }
 
-    .logo { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 700; color: #fff; text-decoration: none; }
-    .logo-icon { width: 34px; height: 34px; background: #fff; color: #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+    /* ===== Базовый скоуп страницы оплаты ===== */
+    .vb-t8k-root,
+    .vb-t8k-root * { box-sizing: border-box; }
 
-    .pay-container { max-width: 500px; margin: 60px auto; padding: 40px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; width: 90%; }
-    h2 { margin-bottom: 20px; font-size: 1.8rem; }
-    .order-info { margin-bottom: 30px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid var(--card-border); }
-    .order-info p { color: var(--text-muted); margin-bottom: 8px; }
-    .order-info strong { color: #fff; font-size: 1.2rem; }
+    .vb-t8k-root input,
+    .vb-t8k-root textarea,
+    .vb-t8k-root select { font: inherit; }
 
-    .btn { padding: 12px 24px; border-radius: 30px; text-decoration: none; font-weight: 600; display: block; width: 100%; text-align: center; cursor: pointer; border: none; font-size: 1rem; transition: 0.3s; }
-    .btn-primary { background: #fff; color: #000; margin-bottom: 15px; }
-    .btn-primary:hover { opacity: 0.9; transform: translateY(-2px); }
-    .btn-outline { border: 1px solid var(--card-border); color: #fff; background: transparent; }
-    .btn-outline:hover { background: rgba(255,255,255,0.05); }
+    .vb-t8k-root {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: var(--font-text);
+      font-size: 16px;
+      color: var(--text);
+    }
 
-    footer { border-top: 1px solid var(--card-border); padding: 30px 8%; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+    /* Лабораторная сетка-подложка, как на главной */
+    .vb-t8k-root::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 64px 64px;
+      -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 30%, transparent 75%);
+      mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 30%, transparent 75%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .vb-t8k-root > * { position: relative; z-index: 1; }
+
+    .vb-t8k-root :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    @keyframes vb-t8k-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(200, 255, 77, 0.5); }
+      50% { box-shadow: 0 0 0 6px rgba(200, 255, 77, 0); }
+    }
+
+    @keyframes vb-t8k-spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .vb-t8k-anim-pulse {
+      animation: vb-t8k-pulse 2.4s infinite;
+    }
+
+    /* ===== Хедер ===== */
+    .vb-t8k-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 6%;
+      border-bottom: 1px solid var(--line);
+      background: rgba(7, 8, 11, 0.8);
+      backdrop-filter: blur(14px);
+      position: sticky;
+      top: 0;
+      z-index: var(--z-header);
+    }
+
+    .vb-t8k-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-head);
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .vb-t8k-logo:hover { opacity: 0.8; }
+
+    .vb-t8k-logo__icon {
+      width: 30px;
+      height: 30px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .vb-t8k-nav {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .vb-t8k-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      padding: 8px 14px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .vb-t8k-nav a:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .vb-t8k-account {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .vb-t8k-account__email {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-family: var(--font-mono);
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .vb-t8k-burger {
+      display: none;
+      background: none;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .vb-t8k-burger span,
+    .vb-t8k-burger span::before,
+    .vb-t8k-burger span::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 18px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform 0.3s var(--ease-out), opacity 0.2s;
+    }
+
+    .vb-t8k-burger span { top: 50%; margin-top: -1px; }
+    .vb-t8k-burger span::before { top: -6px; left: 0; transform: none; }
+    .vb-t8k-burger span::after { top: 6px; left: 0; transform: none; }
+
+    .vb-t8k-header--menu-open .vb-t8k-burger span { background: transparent; }
+    .vb-t8k-header--menu-open .vb-t8k-burger span::before { transform: translateY(6px) rotate(45deg); }
+    .vb-t8k-header--menu-open .vb-t8k-burger span::after { transform: translateY(-6px) rotate(-45deg); }
+
+    /* ===== Кнопки ===== */
+    .vb-t8k-root .vb-t8k-btn {
+      padding: 11px 22px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: transform 0.25s var(--ease-out), background 0.2s, border-color 0.2s, box-shadow 0.25s, opacity 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      border: none;
+      text-align: center;
+      font-family: var(--font-text);
+      line-height: 1.3;
+    }
+
+    .vb-t8k-btn--primary {
+      background: var(--accent);
+      color: var(--accent-ink);
+    }
+
+    .vb-t8k-btn--primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(200, 255, 77, 0.25);
+    }
+
+    .vb-t8k-btn--outline {
+      border: 1px solid var(--line-strong);
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .vb-t8k-btn--outline:hover {
+      border-color: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .vb-t8k-btn--ghost {
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid transparent;
+    }
+
+    .vb-t8k-btn--ghost:hover { color: var(--text); }
+
+    .vb-t8k-btn--sm {
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      border-radius: 10px;
+    }
+
+    .vb-t8k-btn--block { width: 100%; }
+
+    .vb-t8k-btn--lg {
+      padding: 15px 28px;
+      font-size: 1rem;
+      border-radius: 14px;
+    }
+
+    .vb-t8k-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* ===== Гейты ===== */
+    .vb-t8k-gate {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 96px 6% 120px;
+      text-align: center;
+    }
+
+    .vb-t8k-gate__panel {
+      background: linear-gradient(180deg, var(--panel-2) 0%, var(--panel) 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 44px 36px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .vb-t8k-gate__icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 20px;
+      border: 1px solid var(--line-strong);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .vb-t8k-gate h1 {
+      font-family: var(--font-head);
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+      text-wrap: balance;
+    }
+
+    .vb-t8k-gate p {
+      color: var(--muted);
+      font-size: 0.98rem;
+      margin-bottom: 28px;
+    }
+
+    .vb-t8k-gate__actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ===== Шапка оплаты ===== */
+    .vb-t8k-hero {
+      max-width: 1180px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 48px 6% 8px;
+    }
+
+    .vb-t8k-backlink {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      text-decoration: none;
+      margin-bottom: 22px;
+      transition: color 0.2s;
+    }
+
+    .vb-t8k-backlink:hover { color: var(--accent); }
+
+    .vb-t8k-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      border-radius: 999px;
+      padding: 6px 14px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      width: fit-content;
+      margin-bottom: 18px;
+    }
+
+    .vb-t8k-badge--ok {
+      color: var(--accent);
+      border-color: rgba(200, 255, 77, 0.3);
+    }
+
+    .vb-t8k-badge__dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    .vb-t8k-hero h1 {
+      font-family: var(--font-head);
+      font-size: clamp(1.9rem, 4.4vw, 2.7rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin: 0 0 10px;
+      text-wrap: balance;
+    }
+
+    .vb-t8k-hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .vb-t8k-hero__sub {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 56ch;
+      margin: 0;
+    }
+
+    /* ===== Основная сетка ===== */
+    .vb-t8k-layout {
+      max-width: 1180px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 32px 6% 24px;
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .vb-t8k-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+
+    .vb-t8k-panel__title {
+      font-family: var(--font-head);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin: 0 0 4px;
+    }
+
+    .vb-t8k-panel__descr {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin: 0 0 20px;
+    }
+
+    /* Табы способов оплаты */
+    .vb-t8k-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .vb-t8k-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: var(--text);
+      cursor: pointer;
+      font-family: var(--font-text);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: left;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .vb-t8k-tab:hover { border-color: var(--line-strong); }
+
+    .vb-t8k-tab__icon { font-size: 1.15rem; }
+
+    .vb-t8k-tab__hint {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 400;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+
+    .vb-t8k-tab[aria-selected="true"] {
+      border-color: rgba(200, 255, 77, 0.45);
+      background: rgba(200, 255, 77, 0.06);
+    }
+
+    .vb-t8k-tab[aria-selected="true"] .vb-t8k-tab__hint { color: var(--accent); }
+
+    /* Превью карты */
+    .vb-t8k-cardpreview {
+      position: relative;
+      background:
+        radial-gradient(circle at 85% 15%, rgba(200, 255, 77, 0.12) 0%, transparent 55%),
+        linear-gradient(135deg, #14182280 0%, #0b0e14 100%), var(--panel-2);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      padding: 22px;
+      margin-bottom: 22px;
+      overflow: hidden;
+    }
+
+    .vb-t8k-cardpreview::after {
+      content: '';
+      position: absolute;
+      right: -40px;
+      bottom: -60px;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(200, 255, 77, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .vb-t8k-cardpreview__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 26px;
+    }
+
+    .vb-t8k-cardpreview__brand {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .vb-t8k-cardpreview__chip {
+      width: 38px;
+      height: 28px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, rgba(200, 255, 77, 0.55) 0%, rgba(200, 255, 77, 0.15) 100%);
+      border: 1px solid rgba(200, 255, 77, 0.3);
+    }
+
+    .vb-t8k-cardpreview__number {
+      font-family: var(--font-mono);
+      font-size: clamp(0.95rem, 3.4vw, 1.15rem);
+      letter-spacing: 0.14em;
+      margin-bottom: 18px;
+      word-break: break-all;
+    }
+
+    .vb-t8k-cardpreview__row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .vb-t8k-cardpreview__row strong {
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    /* Форма */
+    .vb-t8k-fieldgrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .vb-t8k-field { display: grid; gap: 8px; }
+    .vb-t8k-field--full { grid-column: 1 / -1; }
+
+    .vb-t8k-field label {
+      color: #d3d7e0;
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+
+    .vb-t8k-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: var(--font-text);
+    }
+
+    .vb-t8k-input--mono { font-family: var(--font-mono); letter-spacing: 0.06em; }
+
+    .vb-t8k-input::placeholder { color: #6b7382; }
+
+    .vb-t8k-input:focus {
+      border-color: rgba(200, 255, 77, 0.55);
+      box-shadow: 0 0 0 3px rgba(200, 255, 77, 0.12);
+    }
+
+    .vb-t8k-input[aria-invalid="true"] {
+      border-color: rgba(255, 99, 99, 0.65);
+    }
+
+    .vb-t8k-input:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .vb-t8k-formerror {
+      display: none;
+      color: var(--danger);
+      font-size: 0.84rem;
+      margin: 14px 0 0;
+    }
+
+    .vb-t8k-formerror--visible { display: block; }
+
+    /* Альтернативные способы */
+    .vb-t8k-alt { display: none; }
+    .vb-t8k-alt--active { display: block; }
+    .vb-t8k-cardform--hidden { display: none; }
+
+    .vb-t8k-cryptoaddr {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+
+    .vb-t8k-cryptoaddr code {
+      flex: 1;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: #b9c2d2;
+      word-break: break-all;
+    }
+
+    .vb-t8k-qrcode {
+      width: 168px;
+      height: 168px;
+      margin: 4px auto 18px;
+      background: #edeff3;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .vb-t8k-qrcode__grid {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 4px;
+      padding: 16px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .vb-t8k-qrcode__cell {
+      border-radius: 2px;
+      background: transparent;
+    }
+
+    .vb-t8k-qrcode__cell--on { background: #0a0c10; }
+
+    .vb-t8k-qrcode__logo {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 1.15rem;
+      border: 4px solid #edeff3;
+    }
+
+    .vb-t8k-steps {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 20px;
+      display: grid;
+      gap: 10px;
+      counter-reset: vb-t8k-step;
+    }
+
+    .vb-t8k-steps li {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .vb-t8k-steps li::before {
+      counter-increment: vb-t8k-step;
+      content: counter(vb-t8k-step);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      border: 1px solid rgba(200, 255, 77, 0.3);
+      border-radius: 8px;
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ===== Сводка заказа ===== */
+    .vb-t8k-summary {
+      position: sticky;
+      top: 96px;
+    }
+
+    .vb-t8k-summary__plan {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+
+    .vb-t8k-summary__name {
+      font-family: var(--font-head);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .vb-t8k-summary__tag {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(200, 255, 77, 0.3);
+      border-radius: 999px;
+      padding: 4px 10px;
+    }
+
+    .vb-t8k-summary__meta {
+      list-style: none;
+      padding: 0;
+      margin: 18px 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .vb-t8k-summary__meta li {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      font-size: 0.9rem;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .vb-t8k-summary__meta li span:first-child {
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+    }
+
+    .vb-t8k-summary__meta li.vb-t8k-summary__meta-row--discount span:last-child {
+      color: var(--accent);
+    }
+
+    .vb-t8k-summary__total {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      padding: 16px 0 6px;
+      border-top: 1px solid var(--line-strong);
+      margin-bottom: 16px;
+    }
+
+    .vb-t8k-summary__total span {
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .vb-t8k-summary__total strong {
+      font-family: var(--font-head);
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    /* Промокод */
+    .vb-t8k-promo {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .vb-t8k-promo .vb-t8k-input {
+      flex: 1;
+      min-width: 0;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      font-size: 0.85rem;
+    }
+
+    .vb-t8k-promo__msg {
+      display: none;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      margin: -10px 0 16px;
+      color: var(--accent);
+    }
+
+    .vb-t8k-promo__msg--error { color: var(--danger); }
+    .vb-t8k-promo__msg--visible { display: block; }
+
+    .vb-t8k-trust {
+      list-style: none;
+      padding: 18px 0 0;
+      margin: 18px 0 0;
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: 10px;
+    }
+
+    .vb-t8k-trust li {
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .vb-t8k-trust li span:first-child { flex-shrink: 0; }
+
+    /* Хорёк-советник */
+    .vb-t8k-mascot {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      margin-top: 20px;
+    }
+
+    .vb-t8k-mascot img {
+      width: 84px;
+      height: 84px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      flex-shrink: 0;
+    }
+
+    .vb-t8k-mascot p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin: 0;
+    }
+
+    .vb-t8k-mascot p strong { color: var(--text); font-weight: 600; }
+
+    /* ===== Гарантии ===== */
+    .vb-t8k-section {
+      max-width: 1180px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 6% 56px;
+    }
+
+    .vb-t8k-section h2 {
+      font-family: var(--font-head);
+      font-size: clamp(1.4rem, 3vw, 1.8rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 20px;
+      text-wrap: balance;
+    }
+
+    .vb-t8k-faq {
+      display: grid;
+      gap: 10px;
+    }
+
+    .vb-t8k-faq details {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      transition: border-color 0.2s ease;
+    }
+
+    .vb-t8k-faq details:hover { border-color: var(--line-strong); }
+
+    .vb-t8k-faq summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .vb-t8k-faq summary::-webkit-details-marker { display: none; }
+
+    .vb-t8k-faq summary::after {
+      content: '+';
+      font-family: var(--font-mono);
+      color: var(--accent);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      transition: transform 0.25s var(--ease-out);
+    }
+
+    .vb-t8k-faq details[open] summary::after { transform: rotate(45deg); }
+
+    .vb-t8k-faq details p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin: 12px 0 0;
+      max-width: 72ch;
+    }
+
+    /* ===== Успешная оплата ===== */
+    .vb-t8k-success {
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 72px 6% 96px;
+      text-align: center;
+    }
+
+    .vb-t8k-success[hidden] { display: none; }
+
+    .vb-t8k-success__panel {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(200, 255, 77, 0.09) 0%, transparent 60%),
+        linear-gradient(180deg, var(--panel-2) 0%, var(--panel) 100%);
+      border: 1px solid rgba(200, 255, 77, 0.35);
+      border-radius: var(--radius-lg);
+      padding: 48px 36px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .vb-t8k-success__icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 22px;
+      border-radius: 18px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+    }
+
+    .vb-t8k-success h1 {
+      font-family: var(--font-head);
+      font-size: clamp(1.6rem, 4.4vw, 2.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 10px;
+      text-wrap: balance;
+    }
+
+    .vb-t8k-success__sub {
+      color: var(--muted);
+      font-size: 0.96rem;
+      margin: 0 auto 26px;
+      max-width: 46ch;
+    }
+
+    .vb-t8k-receipt {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 26px;
+      display: grid;
+      gap: 8px;
+      text-align: left;
+    }
+
+    .vb-t8k-receipt li {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .vb-t8k-receipt li span:first-child { color: var(--muted); }
+    .vb-t8k-receipt li span:last-child { word-break: break-all; text-align: right; }
+
+    .vb-t8k-success__actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .vb-t8k-nextsteps {
+      margin-top: 28px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: 10px;
+      text-align: left;
+    }
+
+    .vb-t8k-nextsteps li {
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .vb-t8k-nextsteps li span:first-child { flex-shrink: 0; }
+
+    .vb-t8k-nextsteps { list-style: none; padding-left: 0; }
+
+    /* ===== Оверлей обработки платежа ===== */
+    .vb-t8k-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 8, 11, 0.88);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: var(--z-overlay);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      padding: 20px;
+    }
+
+    .vb-t8k-overlay--active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .vb-t8k-overlay__box {
+      background: var(--panel-2);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .vb-t8k-overlay__head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .vb-t8k-overlay__spinner {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 3px solid rgba(200, 255, 77, 0.2);
+      border-top-color: var(--accent);
+      animation: vb-t8k-spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .vb-t8k-overlay__head h2 {
+      font-family: var(--font-head);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+
+    .vb-t8k-overlay__head p {
+      margin: 2px 0 0;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .vb-t8k-overlay__log {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 18px;
+      display: grid;
+      gap: 8px;
+      min-height: 132px;
+    }
+
+    .vb-t8k-overlay__log li {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+    }
+
+    .vb-t8k-overlay__log li.vb-t8k-overlay__log-item--visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    .vb-t8k-overlay__log li em {
+      font-style: normal;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .vb-t8k-overlay__track {
+      height: 5px;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .vb-t8k-overlay__fill {
+      height: 100%;
+      width: 0;
+      background: var(--accent);
+      border-radius: 999px;
+      transition: width 0.5s var(--ease-out);
+    }
+
+    /* ===== Тост ===== */
+    .vb-t8k-toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      padding: 15px 22px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      transform: translateY(160px);
+      transition: transform 0.35s var(--ease-out);
+      z-index: var(--z-toast);
+      max-width: min(340px, calc(100vw - 60px));
+      font-family: var(--font-text);
+    }
+
+    .vb-t8k-toast--show { transform: translateY(0); }
+
+    /* ===== Футер ===== */
+    .vb-t8k-footer {
+      border-top: 1px solid var(--line);
+      margin-top: auto;
+      padding: 36px 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .vb-t8k-footer .vb-t8k-logo { font-size: 1rem; }
+
+    /* ===== Появление при скролле ===== */
+    .js .vb-t8k-reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+
+    .js .vb-t8k-reveal.vb-t8k-reveal--visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ===== Адаптив ===== */
+    @media (max-width: 960px) {
+      .vb-t8k-header {
+        padding: 14px 5%;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .vb-t8k-burger { display: block; margin-left: auto; order: 2; }
+      .vb-t8k-account { order: 3; margin-left: auto; }
+
+      .vb-t8k-nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        background: rgba(10, 12, 17, 0.98);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--line);
+        padding: 8px 5% 16px;
+        z-index: var(--z-mobile-menu);
+      }
+
+      .vb-t8k-header--menu-open .vb-t8k-nav { display: flex; }
+
+      .vb-t8k-nav a {
+        padding: 14px 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 0;
+      }
+
+      .vb-t8k-hero { padding: 36px 5% 4px; }
+
+      .vb-t8k-layout {
+        grid-template-columns: 1fr;
+        padding: 24px 5% 16px;
+      }
+
+      .vb-t8k-summary { position: static; order: -1; }
+
+      .vb-t8k-section { padding: 20px 5% 48px; }
+    }
+
+    @media (max-width: 640px) {
+      .vb-t8k-account__email { display: none; }
+
+      .vb-t8k-tabs { grid-template-columns: 1fr; }
+
+      .vb-t8k-fieldgrid { grid-template-columns: 1fr; }
+
+      .vb-t8k-panel { padding: 22px 18px; }
+
+      .vb-t8k-success__panel { padding: 36px 22px; }
+    }
+
+    @media (max-width: 480px) {
+      .vb-t8k-gate { padding: 56px 5% 80px; }
+      .vb-t8k-gate__panel { padding: 32px 22px; }
+
+      .vb-t8k-cryptoaddr { flex-direction: column; align-items: stretch; }
+
+      .vb-t8k-success__actions { flex-direction: column; }
+      .vb-t8k-success__actions .vb-t8k-btn { width: 100%; }
+
+      .vb-t8k-mascot { flex-direction: column; text-align: center; }
+
+      .vb-t8k-toast {
+        right: 16px;
+        left: 16px;
+        bottom: 16px;
+        max-width: none;
+      }
+
+      .vb-t8k-overlay__box { padding: 24px 18px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      .vb-t8k-root *,
+      .vb-t8k-root *::before,
+      .vb-t8k-root *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
+
+      .js .vb-t8k-reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
   </style>
 </head>
 <body>
+<div class="vb-t8k-root" id="vb-t8k-root" data-vibeblock-unique-section="yes">
 
-  <header>
-    <a href="index.html" class="logo">
-      <div class="logo-icon">Q</div>
+  <!-- Навигация -->
+  <header class="vb-t8k-header" id="vb-t8k-header">
+    <a href="index.html" class="vb-t8k-logo">
+      <span class="vb-t8k-logo__icon" aria-hidden="true">Q</span>
       <span>QuarkVPN</span>
     </a>
-    <a href="index.html" class="btn btn-outline" style="width: auto; padding: 8px 18px; font-size: 0.9rem;">На главную</a>
-  </header>
 
-  <div class="pay-container">
-    <h2>Оплата заказа</h2>
-    <div class="order-info" id="order-details">
-      <p>Выбранный тариф:</p>
-      <strong id="plan-title">Загрузка...</strong>
-      <p style="margin-top: 15px;">К оплате:</p>
-      <strong id="plan-price" style="font-size: 1.5rem; color: #4cd137;">0 ₽</strong>
+    <nav class="vb-t8k-nav" id="vb-t8k-nav" aria-label="Навигация по сайту">
+      <a href="index.html#features">Возможности</a>
+      <a href="index.html#pricing">Тарифы</a>
+      <a href="index.html#support">Поддержка</a>
+    </nav>
+
+    <div class="vb-t8k-account" id="vb-t8k-account" hidden>
+      <span class="vb-t8k-account__email" id="vb-t8k-email"></span>
+      <a href="dashboard.html" class="vb-t8k-btn vb-t8k-btn--outline vb-t8k-btn--sm">Кабинет</a>
     </div>
 
-    <button class="btn btn-primary" onclick="completePayment()">Оплатить банковской картой</button>
-    <a href="index.html" class="btn btn-outline">Отменить и вернуться назад</a>
+    <button type="button" class="vb-t8k-burger" id="vb-t8k-burger"
+            aria-label="Открыть меню" aria-expanded="false" aria-controls="vb-t8k-nav">
+      <span aria-hidden="true"></span>
+    </button>
+  </header>
+
+  <!-- Гейт: нет сессии -->
+  <section class="vb-t8k-gate" id="vb-t8k-gate-auth" data-section-name="Требуется вход" aria-labelledby="vb-t8k-gate-auth-title" hidden>
+    <div class="vb-t8k-gate__panel">
+      <div class="vb-t8k-gate__icon" aria-hidden="true">🔐</div>
+      <h1 id="vb-t8k-gate-auth-title">Оплата привязана к аккаунту</h1>
+      <p>Войдите или создайте профиль — так подписка, устройства и ключи останутся с вами на любом устройстве.</p>
+      <div class="vb-t8k-gate__actions">
+        <a href="index.html" class="vb-t8k-btn vb-t8k-btn--primary">Войти на сайте</a>
+        <a href="index.html#pricing" class="vb-t8k-btn vb-t8k-btn--outline">Выбрать тариф</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Гейт: нет выбранного тарифа -->
+  <section class="vb-t8k-gate" id="vb-t8k-gate-plan" data-section-name="Тариф не выбран" aria-labelledby="vb-t8k-gate-plan-title" hidden>
+    <div class="vb-t8k-gate__panel">
+      <div class="vb-t8k-gate__icon" aria-hidden="true">🛰️</div>
+      <h1 id="vb-t8k-gate-plan-title">Тариф не выбран</h1>
+      <p id="vb-t8k-gate-plan-text">Вернитесь на главную и выберите подходящий план — мы сохраним его и подождём здесь.</p>
+      <div class="vb-t8k-gate__actions">
+        <a href="index.html#pricing" class="vb-t8k-btn vb-t8k-btn--primary">К выбору тарифа</a>
+        <a href="dashboard.html" class="vb-t8k-btn vb-t8k-btn--outline" id="vb-t8k-gate-plan-dash" hidden>В личный кабинет</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Оплата -->
+  <div id="vb-t8k-app" hidden>
+
+    <section class="vb-t8k-hero" data-section-name="Оформление оплаты" aria-labelledby="vb-t8k-hero-title">
+      <a href="index.html#pricing" class="vb-t8k-backlink">← Изменить тариф</a>
+      <span class="vb-t8k-badge vb-t8k-badge--ok">
+        <span class="vb-t8k-badge__dot vb-t8k-anim-pulse" aria-hidden="true"></span>
+        Защищённый канал · TLS 1.3
+      </span>
+      <h1 id="vb-t8k-hero-title">Оплата тарифа <em id="vb-t8k-hero-plan">—</em></h1>
+      <p class="vb-t8k-hero__sub">Подписка активируется сразу после подтверждения платежа. Данные карты не сохраняются на наших серверах.</p>
+    </section>
+
+    <div class="vb-t8k-layout">
+
+      <!-- Способ оплаты и форма -->
+      <section class="vb-t8k-panel vb-t8k-reveal" data-section-name="Способ оплаты" aria-labelledby="vb-t8k-methods-title">
+        <h2 class="vb-t8k-panel__title" id="vb-t8k-methods-title">Способ оплаты</h2>
+        <p class="vb-t8k-panel__descr">Выберите удобный вариант — сумма и срок действия останутся теми же.</p>
+
+        <div class="vb-t8k-tabs" role="tablist" aria-label="Способы оплаты">
+          <button type="button" class="vb-t8k-tab" role="tab" id="vb-t8k-tab-card"
+                  aria-selected="true" aria-controls="vb-t8k-panel-card" data-method="card">
+            <span class="vb-t8k-tab__icon" aria-hidden="true">💳</span>
+            Банковская карта
+            <span class="vb-t8k-tab__hint">Мир · Visa · MC</span>
+          </button>
+          <button type="button" class="vb-t8k-tab" role="tab" id="vb-t8k-tab-sbp"
+                  aria-selected="false" aria-controls="vb-t8k-panel-sbp" data-method="sbp" tabindex="-1">
+            <span class="vb-t8k-tab__icon" aria-hidden="true">📱</span>
+            СБП
+            <span class="vb-t8k-tab__hint">по QR-коду</span>
+          </button>
+          <button type="button" class="vb-t8k-tab" role="tab" id="vb-t8k-tab-crypto"
+                  aria-selected="false" aria-controls="vb-t8k-panel-crypto" data-method="crypto" tabindex="-1">
+            <span class="vb-t8k-tab__icon" aria-hidden="true">🪙</span>
+            Криптовалюта
+            <span class="vb-t8k-tab__hint">USDT · TRC-20</span>
+          </button>
+        </div>
+
+        <!-- Карта -->
+        <div class="vb-t8k-alt vb-t8k-alt--active" id="vb-t8k-panel-card" role="tabpanel" aria-labelledby="vb-t8k-tab-card">
+          <div class="vb-t8k-cardpreview" aria-hidden="true">
+            <div class="vb-t8k-cardpreview__top">
+              <span class="vb-t8k-cardpreview__chip"></span>
+              <span class="vb-t8k-cardpreview__brand" id="vb-t8k-pv-brand">карта</span>
+            </div>
+            <div class="vb-t8k-cardpreview__number" id="vb-t8k-pv-number">•••• •••• •••• ••••</div>
+            <div class="vb-t8k-cardpreview__row">
+              <span id="vb-t8k-pv-holder">ВЛАДЕЛЕЦ КАРТЫ</span>
+              <span><strong id="vb-t8k-pv-exp">ММ/ГГ</strong></span>
+            </div>
+          </div>
+
+          <form id="vb-t8k-cardform" novalidate>
+            <div class="vb-t8k-fieldgrid">
+              <div class="vb-t8k-field vb-t8k-field--full">
+                <label for="vb-t8k-card-number">Номер карты</label>
+                <input type="text" id="vb-t8k-card-number" class="vb-t8k-input vb-t8k-input--mono"
+                       inputmode="numeric" autocomplete="cc-number" maxlength="19"
+                       placeholder="0000 0000 0000 0000">
+              </div>
+              <div class="vb-t8k-field">
+                <label for="vb-t8k-card-exp">Срок действия</label>
+                <input type="text" id="vb-t8k-card-exp" class="vb-t8k-input vb-t8k-input--mono"
+                       inputmode="numeric" autocomplete="cc-exp" maxlength="5" placeholder="ММ/ГГ">
+              </div>
+              <div class="vb-t8k-field">
+                <label for="vb-t8k-card-cvc">CVC / CVV</label>
+                <input type="password" id="vb-t8k-card-cvc" class="vb-t8k-input vb-t8k-input--mono"
+                       inputmode="numeric" autocomplete="cc-csc" maxlength="3" placeholder="•••">
+              </div>
+              <div class="vb-t8k-field vb-t8k-field--full">
+                <label for="vb-t8k-card-email">Email для чека</label>
+                <input type="email" id="vb-t8k-card-email" class="vb-t8k-input"
+                       autocomplete="email" placeholder="name@example.com">
+              </div>
+            </div>
+
+            <p class="vb-t8k-formerror" id="vb-t8k-card-error" role="alert"></p>
+
+            <button type="submit" class="vb-t8k-btn vb-t8k-btn--primary vb-t8k-btn--lg vb-t8k-btn--block" id="vb-t8k-pay-btn" style="margin-top: 20px;">
+              Оплатить <span id="vb-t8k-pay-amount">—</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- СБП -->
+        <div class="vb-t8k-alt" id="vb-t8k-panel-sbp" role="tabpanel" aria-labelledby="vb-t8k-tab-sbp" hidden>
+          <ol class="vb-t8k-steps">
+            <li>Откройте приложение банка и отсканируйте QR-код.</li>
+            <li>Проверьте сумму <strong id="vb-t8k-sbp-amount" style="color: var(--text); font-weight: 600;">—</strong> и подтвердите платёж.</li>
+            <li>Вернитесь на эту страницу и нажмите кнопку ниже.</li>
+          </ol>
+
+          <div class="vb-t8k-qrcode" role="img" aria-label="Демонстрационный QR-код для оплаты через СБП">
+            <div class="vb-t8k-qrcode__grid" id="vb-t8k-qr-grid" aria-hidden="true"></div>
+            <span class="vb-t8k-qrcode__logo" aria-hidden="true">Q</span>
+          </div>
+
+          <button type="button" class="vb-t8k-btn vb-t8k-btn--primary vb-t8k-btn--lg vb-t8k-btn--block" data-action="pay-sbp">
+            Я оплатил(а) через СБП
+          </button>
+        </div>
+
+        <!-- Криптовалюта -->
+        <div class="vb-t8k-alt" id="vb-t8k-panel-crypto" role="tabpanel" aria-labelledby="vb-t8k-tab-crypto" hidden>
+          <ol class="vb-t8k-steps">
+            <li>Переведите точную сумму <strong id="vb-t8k-crypto-amount" style="color: var(--text); font-weight: 600;">—</strong> на адрес ниже.</li>
+            <li>Сеть — USDT TRC-20. Переводы в других сетях не зачисляются.</li>
+            <li>Подтверждение в сети TRON занимает 1–2 минуты.</li>
+          </ol>
+
+          <div class="vb-t8k-cryptoaddr">
+            <code id="vb-t8k-crypto-addr">TJmQk7VnP2rXt5wY3Lm8Qa1Zc4Bf6Hd9Jg0</code>
+            <button type="button" class="vb-t8k-btn vb-t8k-btn--outline vb-t8k-btn--sm" data-action="copy-crypto">Копировать</button>
+          </div>
+
+          <p style="color: var(--muted); font-size: 0.82rem; font-family: var(--font-mono); margin: 0 0 18px;">
+            Курс зафиксирован на 15 минут · обновите страницу при просрочке
+          </p>
+
+          <button type="button" class="vb-t8k-btn vb-t8k-btn--primary vb-t8k-btn--lg vb-t8k-btn--block" data-action="pay-crypto">
+            Платёж отправлен
+          </button>
+        </div>
+      </section>
+
+      <!-- Сводка заказа -->
+      <aside class="vb-t8k-summary vb-t8k-reveal" style="--reveal-delay: 100ms;" aria-labelledby="vb-t8k-summary-title">
+        <div class="vb-t8k-panel">
+          <h2 class="vb-t8k-panel__title" id="vb-t8k-summary-title">Ваш заказ</h2>
+
+          <div class="vb-t8k-summary__plan">
+            <span class="vb-t8k-summary__name" id="vb-t8k-sum-name">—</span>
+            <span class="vb-t8k-summary__tag" id="vb-t8k-sum-tag">—</span>
+          </div>
+
+          <ul class="vb-t8k-summary__meta">
+            <li><span>Устройств</span><span id="vb-t8k-sum-limit">—</span></li>
+            <li><span>Период</span><span id="vb-t8k-sum-period">—</span></li>
+            <li><span>Цена</span><span id="vb-t8k-sum-price">—</span></li>
+            <li class="vb-t8k-summary__meta-row--discount" id="vb-t8k-sum-discount-row" hidden>
+              <span>Промокод</span><span id="vb-t8k-sum-discount">—</span>
+            </li>
+          </ul>
+
+          <div class="vb-t8k-promo">
+            <label for="vb-t8k-promo-input" class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Промокод</label>
+            <input type="text" id="vb-t8k-promo-input" class="vb-t8k-input" placeholder="ПРОМОКОД" maxlength="16" autocomplete="off">
+            <button type="button" class="vb-t8k-btn vb-t8k-btn--outline vb-t8k-btn--sm" data-action="apply-promo">Применить</button>
+          </div>
+          <p class="vb-t8k-promo__msg" id="vb-t8k-promo-msg" role="status"></p>
+
+          <div class="vb-t8k-summary__total">
+            <span>К оплате</span>
+            <strong id="vb-t8k-sum-total">—</strong>
+          </div>
+
+          <ul class="vb-t8k-trust">
+            <li><span aria-hidden="true">🔒</span><span>Данные карты передаются напрямую в банк и не сохраняются у нас.</span></li>
+            <li><span aria-hidden="true">↩️</span><span>Возврат без вопросов в течение 14 дней после оплаты.</span></li>
+            <li><span aria-hidden="true">⚡</span><span>Подписка и конфигурации активируются автоматически.</span></li>
+          </ul>
+        </div>
+
+        <div class="vb-t8k-mascot">
+          <img src="ferret.png" alt="Хорёк-Связист — талисман QuarkVPN">
+          <p><strong>Хорёк-Связист:</strong> «Оплачивай спокойно: чек придёт на почту, а доступ откроется раньше, чем ты успеешь открыть приложение!»</p>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Гарантии и вопросы -->
+    <section class="vb-t8k-section" data-section-name="Гарантии и вопросы" aria-labelledby="vb-t8k-faq-title">
+      <h2 id="vb-t8k-faq-title">Коротко о важном перед оплатой</h2>
+      <div class="vb-t8k-faq">
+        <details>
+          <summary>Когда активируется подписка?</summary>
+          <p>Сразу после подтверждения платежа — обычно в течение минуты. Для карт и СБП активация моментальная, для криптовалюты нужно дождаться подтверждения транзакции в сети (1–2 минуты).</p>
+        </details>
+        <details>
+          <summary>Как вернуть деньги, если что-то не устроит?</summary>
+          <p>Напишите в поддержку в течение 14 дней после оплаты — вернём сумму на тот же способ оплаты без лишних вопросов. Даже если вы уже подключили устройства.</p>
+        </details>
+        <details>
+          <summary>Вы храните данные моей карты?</summary>
+          <p>Нет. Номер, срок и CVC уходят напрямую в платёжный шлюз по защищённому каналу и не попадают в нашу базу — в аккаунте хранится только факт оплаты и чек.</p>
+        </details>
+        <details>
+          <summary>Можно ли продлить или сменить тариф позже?</summary>
+          <p>Да, в личном кабинете: продление добавляет оплаченный период к текущему, а смена тарифа вступает в силу сразу с пересчётом лимита устройств.</p>
+        </details>
+      </div>
+    </section>
   </div>
 
-  <footer>
-    <p>© 2026 QuarkVPN. Безопасные платежи.</p>
+  <!-- Успешная оплата -->
+  <section class="vb-t8k-success" id="vb-t8k-success" data-section-name="Успешная оплата" aria-labelledby="vb-t8k-success-title" hidden>
+    <div class="vb-t8k-success__panel">
+      <div class="vb-t8k-success__icon" aria-hidden="true">✓</div>
+      <h1 id="vb-t8k-success-title">Оплата прошла успешно</h1>
+      <p class="vb-t8k-success__sub">Подписка активирована, все узлы открыты. Чек продублирован на вашу почту.</p>
+
+      <ul class="vb-t8k-receipt">
+        <li><span>Номер платежа</span><span id="vb-t8k-receipt-id">—</span></li>
+        <li><span>Тариф</span><span id="vb-t8k-receipt-plan">—</span></li>
+        <li><span>Сумма</span><span id="vb-t8k-receipt-amount">—</span></li>
+        <li><span>Активна до</span><span id="vb-t8k-receipt-expires">—</span></li>
+      </ul>
+
+      <div class="vb-t8k-success__actions">
+        <a href="dashboard.html" class="vb-t8k-btn vb-t8k-btn--primary vb-t8k-btn--lg">Перейти в личный кабинет</a>
+        <a href="index.html" class="vb-t8k-btn vb-t8k-btn--outline vb-t8k-btn--lg">На главную</a>
+      </div>
+
+      <ul class="vb-t8k-nextsteps">
+        <li><span aria-hidden="true">📱</span><span>Добавьте устройства в разделе «Устройства» кабинета — лимит зависит от тарифа.</span></li>
+        <li><span aria-hidden="true">🌍</span><span>Выберите узел и скачайте готовый WireGuard-конфиг одним кликом.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Оверлей обработки платежа -->
+  <div class="vb-t8k-overlay" id="vb-t8k-overlay" role="dialog" aria-modal="true" aria-labelledby="vb-t8k-overlay-title" aria-hidden="true">
+    <div class="vb-t8k-overlay__box">
+      <div class="vb-t8k-overlay__head">
+        <span class="vb-t8k-overlay__spinner" aria-hidden="true"></span>
+        <div>
+          <h2 id="vb-t8k-overlay-title">Обрабатываем платёж</h2>
+          <p>не закрывайте страницу</p>
+        </div>
+      </div>
+      <ul class="vb-t8k-overlay__log" id="vb-t8k-overlay-log" aria-live="polite"></ul>
+      <div class="vb-t8k-overlay__track">
+        <div class="vb-t8k-overlay__fill" id="vb-t8k-overlay-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="vb-t8k-toast" id="vb-t8k-toast" role="status" aria-live="polite"></div>
+
+  <footer class="vb-t8k-footer">
+    <a href="index.html" class="vb-t8k-logo">
+      <span class="vb-t8k-logo__icon" aria-hidden="true">Q</span>
+      <span>QuarkVPN</span>
+    </a>
+    <p>© 2026 QuarkVPN. Все права защищены. Безопасность превыше всего.</p>
   </footer>
+</div>
 
-  <script>
-    const planData = JSON.parse(localStorage.getItem('quark_selected_plan'));
-    const currentEmail = localStorage.getItem('quark_current_user');
+<script>
+  (function () {
+    'use strict';
 
-    if (!planData || !currentEmail) {
-      window.location.href = 'index.html';
-    } else {
-      document.getElementById('plan-title').textContent = planData.name;
-      document.getElementById('plan-price').textContent = planData.price + ' ₽';
+    /* Тот же контракт хранилища, что в index.html и dashboard.html */
+    var DB_KEY = 'quark_users_db_v2';
+    var SESSION_KEY = 'quark_current_user';
+    var PLAN_KEY = 'quark_selected_plan';
+    var DAY_MS = 86400000;
+
+    /* Демонстрационный адрес кошелька. В продакшене замените на серверный.
+       Секреты и настоящие платёжные реквизиты в браузер не попадают. */
+    var CRYPTO_ADDRESS = 'TJmQk7VnP2rXt5wY3Lm8Qa1Zc4Bf6Hd9Jg0';
+    var USDT_RATE = 92.4; /* RUB за 1 USDT, демо-курс */
+
+    /* Рабочие промокоды */
+    var PROMO_CODES = {
+      'QUARK10': { type: 'percent', value: 10 },
+      'LAB20': { type: 'percent', value: 20 }
+    };
+
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var usersDB = loadJson(DB_KEY, {});
+    var currentEmail = localStorage.getItem(SESSION_KEY) || null;
+    var plan = loadJson(PLAN_KEY, null);
+    var promo = null;
+    var currentMethod = 'card';
+    var toastTimer = null;
+    var processing = false;
+
+    var els = {
+      header: document.getElementById('vb-t8k-header'),
+      burger: document.getElementById('vb-t8k-burger'),
+      nav: document.getElementById('vb-t8k-nav'),
+      account: document.getElementById('vb-t8k-account'),
+      accountEmail: document.getElementById('vb-t8k-email'),
+
+      gateAuth: document.getElementById('vb-t8k-gate-auth'),
+      gatePlan: document.getElementById('vb-t8k-gate-plan'),
+      gatePlanText: document.getElementById('vb-t8k-gate-plan-text'),
+      gatePlanDash: document.getElementById('vb-t8k-gate-plan-dash'),
+      app: document.getElementById('vb-t8k-app'),
+      success: document.getElementById('vb-t8k-success'),
+
+      heroPlan: document.getElementById('vb-t8k-hero-plan'),
+
+      tabs: Array.prototype.slice.call(document.querySelectorAll('.vb-t8k-tab')),
+      panelCard: document.getElementById('vb-t8k-panel-card'),
+      panelSbp: document.getElementById('vb-t8k-panel-sbp'),
+      panelCrypto: document.getElementById('vb-t8k-panel-crypto'),
+
+      cardForm: document.getElementById('vb-t8k-cardform'),
+      cardNumber: document.getElementById('vb-t8k-card-number'),
+      cardExp: document.getElementById('vb-t8k-card-exp'),
+      cardCvc: document.getElementById('vb-t8k-card-cvc'),
+      cardEmail: document.getElementById('vb-t8k-card-email'),
+      cardError: document.getElementById('vb-t8k-card-error'),
+      payBtn: document.getElementById('vb-t8k-pay-btn'),
+      payAmount: document.getElementById('vb-t8k-pay-amount'),
+
+      pvBrand: document.getElementById('vb-t8k-pv-brand'),
+      pvNumber: document.getElementById('vb-t8k-pv-number'),
+      pvHolder: document.getElementById('vb-t8k-pv-holder'),
+      pvExp: document.getElementById('vb-t8k-pv-exp'),
+
+      sbpAmount: document.getElementById('vb-t8k-sbp-amount'),
+      cryptoAmount: document.getElementById('vb-t8k-crypto-amount'),
+      cryptoAddr: document.getElementById('vb-t8k-crypto-addr'),
+
+      sumName: document.getElementById('vb-t8k-sum-name'),
+      sumTag: document.getElementById('vb-t8k-sum-tag'),
+      sumLimit: document.getElementById('vb-t8k-sum-limit'),
+      sumPeriod: document.getElementById('vb-t8k-sum-period'),
+      sumPrice: document.getElementById('vb-t8k-sum-price'),
+      sumDiscountRow: document.getElementById('vb-t8k-sum-discount-row'),
+      sumDiscount: document.getElementById('vb-t8k-sum-discount'),
+      sumTotal: document.getElementById('vb-t8k-sum-total'),
+
+      promoInput: document.getElementById('vb-t8k-promo-input'),
+      promoMsg: document.getElementById('vb-t8k-promo-msg'),
+
+      overlay: document.getElementById('vb-t8k-overlay'),
+      overlayLog: document.getElementById('vb-t8k-overlay-log'),
+      overlayFill: document.getElementById('vb-t8k-overlay-fill'),
+
+      receiptId: document.getElementById('vb-t8k-receipt-id'),
+      receiptPlan: document.getElementById('vb-t8k-receipt-plan'),
+      receiptAmount: document.getElementById('vb-t8k-receipt-amount'),
+      receiptExpires: document.getElementById('vb-t8k-receipt-expires'),
+
+      toast: document.getElementById('vb-t8k-toast')
+    };
+
+    /* ===== Утилиты ===== */
+
+    function loadJson(key, fallback) {
+      try {
+        var raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (e) {
+        return fallback;
+      }
     }
 
-    function completePayment() {
-      let usersDB = JSON.parse(localStorage.getItem('quark_users_db')) || {};
-      if (usersDB[currentEmail]) {
-        usersDB[currentEmail].subscription = {
-          name: planData.name,
-          limit: planData.limit,
-          active: true
-        };
-        localStorage.setItem('quark_users_db', JSON.stringify(usersDB));
+    function saveDb() {
+      localStorage.setItem(DB_KEY, JSON.stringify(usersDB));
+    }
+
+    function fmtMoney(value) {
+      return '₽' + String(Math.round(value)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    }
+
+    function formatDate(timestamp) {
+      var d = new Date(timestamp);
+      var dd = String(d.getDate()).padStart(2, '0');
+      var mm = String(d.getMonth() + 1).padStart(2, '0');
+      return dd + '.' + mm + '.' + d.getFullYear();
+    }
+
+    function isValidEmail(value) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    }
+
+    function pluralMonths(n) {
+      var mod10 = n % 10;
+      var mod100 = n % 100;
+      if (mod10 === 1 && mod100 !== 11) return n + ' месяц';
+      if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return n + ' месяца';
+      return n + ' месяцев';
+    }
+
+    function monthsFromName(name) {
+      var m = parseInt(name, 10);
+      return isNaN(m) ? 1 : m;
+    }
+
+    function showToast(text) {
+      els.toast.textContent = text;
+      els.toast.classList.add('vb-t8k-toast--show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () {
+        els.toast.classList.remove('vb-t8k-toast--show');
+      }, 3000);
+    }
+
+    function showCardError(message, input) {
+      els.cardError.textContent = message;
+      els.cardError.classList.add('vb-t8k-formerror--visible');
+      if (input) {
+        input.setAttribute('aria-invalid', 'true');
+        input.focus();
+      }
+    }
+
+    function clearCardError() {
+      els.cardError.textContent = '';
+      els.cardError.classList.remove('vb-t8k-formerror--visible');
+      [els.cardNumber, els.cardExp, els.cardCvc, els.cardEmail].forEach(function (input) {
+        input.removeAttribute('aria-invalid');
+      });
+    }
+
+    function copyText(text) {
+      function fallback() {
+        var area = document.createElement('textarea');
+        area.value = text;
+        area.setAttribute('readonly', '');
+        area.style.position = 'fixed';
+        area.style.opacity = '0';
+        document.body.appendChild(area);
+        area.select();
+        try {
+          document.execCommand('copy');
+          showToast('Скопировано в буфер обмена.');
+        } catch (e) {
+          showToast('Не удалось скопировать — выделите текст вручную.');
+        }
+        document.body.removeChild(area);
       }
 
-      // Перенаправляем в личный кабинет после успешной имитации оплаты
-      window.location.href = 'dashboard.html';
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () {
+          showToast('Скопировано в буфер обмена.');
+        }).catch(fallback);
+      } else {
+        fallback();
+      }
     }
-  </script>
+
+    /* ===== Расчёты ===== */
+
+    function months() { return monthsFromName(plan.name); }
+
+    function baseTotal() { return plan.price * months(); }
+
+    function discountValue() {
+      if (!promo) return 0;
+      if (promo.type === 'percent') return baseTotal() * promo.value / 100;
+      return Math.min(promo.value, baseTotal());
+    }
+
+    function grandTotal() { return Math.max(0, baseTotal() - discountValue()); }
+
+    /* ===== Отрисовка сводки ===== */
+
+    function renderSummary() {
+      els.heroPlan.textContent = plan.name;
+      els.sumName.textContent = plan.name;
+      els.sumTag.textContent = plan.limit >= 10 ? 'максимум' : (plan.limit >= 5 ? 'хит' : 'базовый');
+      els.sumLimit.textContent = 'до ' + plan.limit;
+      els.sumPeriod.textContent = pluralMonths(months());
+      els.sumPrice.textContent = fmtMoney(plan.price) + ' / мес';
+
+      if (promo) {
+        els.sumDiscountRow.hidden = false;
+        els.sumDiscount.textContent = '−' + fmtMoney(discountValue());
+      } else {
+        els.sumDiscountRow.hidden = true;
+        els.sumDiscount.textContent = '—';
+      }
+
+      var total = fmtMoney(grandTotal());
+      els.sumTotal.textContent = total;
+      els.payAmount.textContent = total;
+      els.sbpAmount.textContent = total;
+
+      var usdt = (grandTotal() / USDT_RATE).toFixed(2);
+      els.cryptoAmount.textContent = usdt + ' USDT (≈ ' + total + ')';
+    }
+
+    /* ===== Превью карты ===== */
+
+    function detectBrand(digits) {
+      if (/^220[0-4]/.test(digits)) return 'МИР';
+      if (/^4/.test(digits)) return 'VISA';
+      if (/^(5[1-5]|2[2-7])/.test(digits)) return 'MASTERCARD';
+      return 'карта';
+    }
+
+    function updatePreview() {
+      var digits = els.cardNumber.value.replace(/\D/g, '');
+      els.pvBrand.textContent = detectBrand(digits);
+
+      var groups = [];
+      for (var i = 0; i < 16; i += 4) {
+        var chunk = digits.slice(i, i + 4);
+        groups.push(chunk + new Array(5 - chunk.length).join('•'));
+      }
+      els.pvNumber.textContent = groups.join(' ');
+
+      var holder = els.cardEmail.value.split('@')[0].toUpperCase().replace(/[^A-ZА-ЯЁ0-9 ]/g, '').slice(0, 18);
+      els.pvHolder.textContent = holder || 'ВЛАДЕЛЕЦ КАРТЫ';
+      els.pvExp.textContent = els.cardExp.value || 'ММ/ГГ';
+    }
+
+    /* ===== Валидация карты ===== */
+
+    function luhnValid(digits) {
+      if (digits.length < 16) return false;
+      var sum = 0;
+      var double = false;
+      for (var i = digits.length - 1; i >= 0; i--) {
+        var d = Number(digits[i]);
+        if (double) {
+          d *= 2;
+          if (d > 9) d -= 9;
+        }
+        sum += d;
+        double = !double;
+      }
+      return sum % 10 === 0;
+    }
+
+    function expValid(value) {
+      var m = /^(\d{2})\/(\d{2})$/.exec(value);
+      if (!m) return false;
+      var month = Number(m[1]);
+      var year = 2000 + Number(m[2]);
+      if (month < 1 || month > 12) return false;
+      var now = new Date();
+      var end = new Date(year, month, 1); /* первый день следующего месяца */
+      return end > now;
+    }
+
+    /* ===== Вкладки способов оплаты ===== */
+
+    function selectMethod(method) {
+      currentMethod = method;
+      els.tabs.forEach(function (tab) {
+        var active = tab.getAttribute('data-method') === method;
+        tab.setAttribute('aria-selected', String(active));
+        tab.tabIndex = active ? 0 : -1;
+      });
+      els.panelCard.classList.toggle('vb-t8k-alt--active', method === 'card');
+      els.panelCard.hidden = method !== 'card';
+      els.panelSbp.classList.toggle('vb-t8k-alt--active', method === 'sbp');
+      els.panelSbp.hidden = method !== 'sbp';
+      els.panelCrypto.classList.toggle('vb-t8k-alt--active', method === 'crypto');
+      els.panelCrypto.hidden = method !== 'crypto';
+    }
+
+    /* ===== QR-демо ===== */
+
+    function buildQrDemo() {
+      var grid = document.getElementById('vb-t8k-qr-grid');
+      if (!grid) return;
+      /* Детерминированный псевдо-QR: просто визуальная заглушка */
+      var seed = 20260419;
+      function next() {
+        seed = (Math.imul(seed, 1103515245) + 12345) >>> 0;
+        return seed;
+      }
+      for (var i = 0; i < 81; i++) {
+        var cell = document.createElement('span');
+        cell.className = 'vb-t8k-qrcode__cell' + (next() % 100 > 46 ? ' vb-t8k-qrcode__cell--on' : '');
+        grid.appendChild(cell);
+      }
+    }
+
+    /* ===== Обработка платежа (демо-симуляция) ===== */
+
+    var PAY_LOG = {
+      card: [
+        'Инициализация защищённого канала…',
+        'Токенизация карты…',
+        'Запрос в банк-эквайер…',
+        '3-D Secure подтверждён',
+        'Платёж подтверждён'
+      ],
+      sbp: [
+        'Ожидание подтверждения банка…',
+        'Сверка суммы перевода…',
+        'Транзакция СБП найдена',
+        'Платёж подтверждён'
+      ],
+      crypto: [
+        'Проверка сети TRON…',
+        'Ожидание подтверждений: 12/12…',
+        'Курс зафиксирован',
+        'Платёж подтверждён'
+      ]
+    };
+
+    function runProcessing(method, done) {
+      if (processing) return;
+      processing = true;
+
+      var lines = PAY_LOG[method] || PAY_LOG.card;
+      els.overlayLog.textContent = '';
+      els.overlayFill.style.width = '0%';
+      els.overlay.classList.add('vb-t8k-overlay--active');
+      els.overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+
+      var stepDelay = reduceMotion ? 60 : 520;
+
+      lines.forEach(function (text, index) {
+        setTimeout(function () {
+          var li = document.createElement('li');
+          var mark = document.createElement('em');
+          mark.textContent = '✓';
+          var label = document.createElement('span');
+          label.textContent = text;
+          li.appendChild(mark);
+          li.appendChild(label);
+          els.overlayLog.appendChild(li);
+          requestAnimationFrame(function () {
+            li.classList.add('vb-t8k-overlay__log-item--visible');
+          });
+          els.overlayFill.style.width = Math.round(((index + 1) / lines.length) * 100) + '%';
+
+          if (index === lines.length - 1) {
+            setTimeout(function () {
+              els.overlay.classList.remove('vb-t8k-overlay--active');
+              els.overlay.setAttribute('aria-hidden', 'true');
+              document.body.style.overflow = '';
+              processing = false;
+              done();
+            }, reduceMotion ? 60 : 600);
+          }
+        }, stepDelay * (index + 1));
+      });
+    }
+
+    /* ===== Завершение оплаты ===== */
+
+    function finishPayment(methodLabel) {
+      var user = usersDB[currentEmail];
+      var now = Date.now();
+      var days = months() * 30;
+      /* Продление: если подписка ещё жива, новый период добавляется к остатку */
+      var base = (user.subscription && user.subscription.expires > now) ? user.subscription.expires : now;
+
+      user.subscription = {
+        name: plan.name,
+        price: plan.price,
+        limit: plan.limit,
+        started: now,
+        expires: base + days * DAY_MS
+      };
+
+      if (!Array.isArray(user.payments)) user.payments = [];
+      var orderId = 'QK-' + now.toString(36).toUpperCase() + '-' + Math.floor(Math.random() * 46656).toString(36).toUpperCase().padStart(3, '0');
+      user.payments.unshift({
+        id: orderId,
+        date: now,
+        amount: grandTotal(),
+        plan: plan.name,
+        method: methodLabel
+      });
+      saveDb();
+      localStorage.removeItem(PLAN_KEY);
+
+      /* Чек */
+      els.receiptId.textContent = orderId;
+      els.receiptPlan.textContent = plan.name + ' · ' + pluralMonths(months());
+      els.receiptAmount.textContent = fmtMoney(grandTotal()) + ' · ' + methodLabel;
+      els.receiptExpires.textContent = formatDate(user.subscription.expires);
+
+      els.app.hidden = true;
+      els.success.hidden = false;
+      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+      showToast('Подписка «' + plan.name + '» активирована!');
+
+      plan = null;
+    }
+
+    /* ===== Обработчики ===== */
+
+    els.tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        selectMethod(tab.getAttribute('data-method'));
+      });
+      tab.addEventListener('keydown', function (event) {
+        var index = els.tabs.indexOf(tab);
+        var next = -1;
+        if (event.key === 'ArrowRight') next = (index + 1) % els.tabs.length;
+        if (event.key === 'ArrowLeft') next = (index - 1 + els.tabs.length) % els.tabs.length;
+        if (next !== -1) {
+          event.preventDefault();
+          els.tabs[next].focus();
+          selectMethod(els.tabs[next].getAttribute('data-method'));
+        }
+      });
+    });
+
+    /* Маски карты */
+    els.cardNumber.addEventListener('input', function () {
+      var digits = els.cardNumber.value.replace(/\D/g, '').slice(0, 16);
+      els.cardNumber.value = digits.replace(/(\d{4})(?=\d)/g, '$1 ');
+      updatePreview();
+      clearCardError();
+    });
+
+    els.cardExp.addEventListener('input', function () {
+      var digits = els.cardExp.value.replace(/\D/g, '').slice(0, 4);
+      if (digits.length >= 3) {
+        els.cardExp.value = digits.slice(0, 2) + '/' + digits.slice(2);
+      } else {
+        els.cardExp.value = digits;
+      }
+      updatePreview();
+      clearCardError();
+    });
+
+    els.cardCvc.addEventListener('input', function () {
+      els.cardCvc.value = els.cardCvc.value.replace(/\D/g, '').slice(0, 3);
+      clearCardError();
+    });
+
+    els.cardEmail.addEventListener('input', function () {
+      updatePreview();
+      clearCardError();
+    });
+
+    els.cardForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      if (processing) return;
+      clearCardError();
+
+      var digits = els.cardNumber.value.replace(/\D/g, '');
+      if (digits.length !== 16) {
+        showCardError('Введите 16-значный номер карты.', els.cardNumber);
+        return;
+      }
+      if (!luhnValid(digits)) {
+        showCardError('Номер карты не прошёл проверку. Проверьте цифры.', els.cardNumber);
+        return;
+      }
+      if (!expValid(els.cardExp.value)) {
+        showCardError('Укажите корректный срок действия в формате ММ/ГГ.', els.cardExp);
+        return;
+      }
+      if (els.cardCvc.value.length !== 3) {
+        showCardError('CVC состоит из трёх цифр.', els.cardCvc);
+        return;
+      }
+      if (!isValidEmail(els.cardEmail.value.trim())) {
+        showCardError('Укажите корректный email для чека.', els.cardEmail);
+        return;
+      }
+
+      runProcessing('card', function () { finishPayment('Карта'); });
+    });
+
+    document.addEventListener('click', function (event) {
+      var actionEl = event.target.closest('[data-action]');
+      if (actionEl) {
+        var action = actionEl.getAttribute('data-action');
+        if (action === 'pay-sbp') {
+          if (!processing) runProcessing('sbp', function () { finishPayment('СБП'); });
+          return;
+        }
+        if (action === 'pay-crypto') {
+          if (!processing) runProcessing('crypto', function () { finishPayment('Криптовалюта'); });
+          return;
+        }
+        if (action === 'copy-crypto') {
+          copyText(CRYPTO_ADDRESS);
+          return;
+        }
+        if (action === 'apply-promo') {
+          applyPromo();
+          return;
+        }
+      }
+    });
+
+    function applyPromo() {
+      var code = els.promoInput.value.trim().toUpperCase();
+      els.promoMsg.classList.add('vb-t8k-promo__msg--visible');
+
+      if (!code) {
+        promo = null;
+        els.promoMsg.classList.remove('vb-t8k-promo__msg--visible');
+        renderSummary();
+        return;
+      }
+
+      var found = PROMO_CODES[code];
+      if (found) {
+        promo = found;
+        els.promoMsg.classList.remove('vb-t8k-promo__msg--error');
+        els.promoMsg.textContent = 'Промокод применён: −' + (found.type === 'percent' ? found.value + '%' : fmtMoney(found.value)) + '.';
+        renderSummary();
+        showToast('Скидка по промокоду активирована.');
+      } else {
+        promo = null;
+        els.promoMsg.classList.add('vb-t8k-promo__msg--error');
+        els.promoMsg.textContent = 'Такого промокода нет. Проверьте раскладку и попробуйте ещё раз.';
+        renderSummary();
+      }
+    }
+
+    els.promoInput.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        applyPromo();
+      }
+    });
+
+    /* ===== Мобильное меню ===== */
+
+    function closeMenu() {
+      els.header.classList.remove('vb-t8k-header--menu-open');
+      els.burger.setAttribute('aria-expanded', 'false');
+      els.burger.setAttribute('aria-label', 'Открыть меню');
+    }
+
+    function toggleMenu() {
+      var isOpen = els.header.classList.toggle('vb-t8k-header--menu-open');
+      els.burger.setAttribute('aria-expanded', String(isOpen));
+      els.burger.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
+    }
+
+    els.burger.addEventListener('click', toggleMenu);
+
+    els.nav.addEventListener('click', function (event) {
+      if (event.target.closest('a')) closeMenu();
+    });
+
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 960) closeMenu();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && els.header.classList.contains('vb-t8k-header--menu-open')) {
+        closeMenu();
+        els.burger.focus();
+      }
+    });
+
+    /* ===== Появление при скролле ===== */
+
+    function initReveal() {
+      var items = document.querySelectorAll('.vb-t8k-reveal');
+      if (!('IntersectionObserver' in window) || reduceMotion) {
+        Array.prototype.forEach.call(items, function (item) {
+          item.classList.add('vb-t8k-reveal--visible');
+        });
+        return;
+      }
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('vb-t8k-reveal--visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+      Array.prototype.forEach.call(items, function (item) {
+        observer.observe(item);
+      });
+    }
+
+    /* ===== Инициализация ===== */
+
+    /* Сессия есть, но аккаунта в базе нет — чистим её */
+    if (currentEmail && !usersDB[currentEmail]) {
+      localStorage.removeItem(SESSION_KEY);
+      currentEmail = null;
+    }
+
+    if (currentEmail) {
+      els.account.hidden = false;
+      els.accountEmail.textContent = currentEmail;
+      els.accountEmail.title = currentEmail;
+    }
+
+    if (!currentEmail) {
+      els.gateAuth.hidden = false;
+    } else if (!plan || !plan.name || !plan.price) {
+      /* Если подписка уже активна — подсказываем в кабинет, а не к тарифам */
+      var sub = usersDB[currentEmail].subscription;
+      if (sub && sub.expires > Date.now()) {
+        els.gatePlanText.textContent = 'Похоже, оплачивать нечего: подписка «' + sub.name + '» уже активна до ' + formatDate(sub.expires) + '.';
+        els.gatePlanDash.hidden = false;
+      }
+      els.gatePlan.hidden = false;
+    } else {
+      els.app.hidden = false;
+      els.cardEmail.value = currentEmail;
+      renderSummary();
+      updatePreview();
+      selectMethod('card');
+      buildQrDemo();
+    }
+
+    initReveal();
+  })();
+</script>
 </body>
 </html>
