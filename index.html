@@ -6,695 +6,359 @@
   <title>QuarkVPN — Абсолютная приватность и скорость</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <script>document.documentElement.className += ' js';</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #07080b;
-      --panel: #0d0f15;
-      --panel-2: #10131a;
-      --line: rgba(255, 255, 255, 0.08);
-      --line-strong: rgba(255, 255, 255, 0.16);
-      --text: #edeff3;
-      --muted: #8b93a5;
-      --accent: #c8ff4d;
-      --accent-ink: #0a0c10;
-      --danger: #ff8585;
-      --font-head: 'Space Grotesk', 'Inter', sans-serif;
-      --font-text: 'Inter', sans-serif;
-      --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
-      --radius: 16px;
-      --radius-lg: 24px;
-      --z-header: 100;
-      --z-mobile-menu: 90;
-      --z-modal: 1000;
-      --z-toast: 1100;
-      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --bg: #090a0f;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent: #ffffff;
+      --text-muted: #8e95a5;
+      --gradient-silver: linear-gradient(135deg, #ffffff 0%, #a6afb8 50%, #4b5563 100%);
+      --glow: rgba(255, 255, 255, 0.15);
     }
-
-    html { scroll-behavior: smooth; }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: var(--font-text);
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
     }
 
     body {
       background-color: var(--bg);
-      color: var(--text);
+      color: #fff;
       overflow-x: hidden;
       line-height: 1.6;
     }
 
-    /* Тонкая сетка-подложка «лаборатории» */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-      background-size: 64px 64px;
-      -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 30%, transparent 75%);
-      mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 30%, transparent 75%);
-      pointer-events: none;
-      z-index: 0;
+    .bg-glow {
+      position: absolute;
+      top: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(160, 175, 200, 0.12) 0%, rgba(9, 10, 15, 0) 70%);
+      z-index: -1;
+      filter: blur(80px);
     }
 
-    :focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 3px;
-      border-radius: 4px;
-    }
-
-    /* ===== Появление при скролле ===== */
-    .js .reveal {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
-      transition-delay: var(--reveal-delay, 0ms);
-    }
-    .js .reveal.is-visible {
-      opacity: 1;
-      transform: none;
-    }
-
-    @keyframes vb-q7x-pulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(200, 255, 77, 0.5); }
-      50% { box-shadow: 0 0 0 6px rgba(200, 255, 77, 0); }
-    }
-
-    /* ===== Хедер ===== */
-    .site-header {
+    header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 18px 6%;
-      border-bottom: 1px solid var(--line);
-      background: rgba(7, 8, 11, 0.8);
-      backdrop-filter: blur(14px);
+      padding: 24px 8%;
+      border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
-      z-index: var(--z-header);
+      z-index: 100;
     }
 
     .logo {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-family: var(--font-head);
-      font-size: 1.2rem;
+      gap: 12px;
+      font-size: 1.3rem;
       font-weight: 700;
-      letter-spacing: -0.02em;
-      color: var(--text);
+      letter-spacing: -0.5px;
+      color: #fff;
       text-decoration: none;
+      cursor: pointer;
       transition: opacity 0.2s;
     }
 
-    .logo:hover { opacity: 0.8; }
+    .logo:hover {
+      opacity: 0.85;
+    }
 
     .logo-icon {
-      width: 30px;
-      height: 30px;
-      background: var(--accent);
-      color: var(--accent-ink);
+      width: 34px;
+      height: 34px;
+      background: #fff;
+      color: #000;
       border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
-      font-size: 1rem;
+      font-weight: 800;
+      font-size: 1.1rem;
     }
 
-    .site-nav {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-    }
-
-    .site-nav a {
-      color: var(--muted);
+    nav a {
+      color: var(--text-muted);
       text-decoration: none;
-      padding: 8px 14px;
-      font-size: 0.92rem;
-      font-weight: 500;
-      border-radius: 8px;
-      transition: color 0.2s, background 0.2s;
+      margin: 0 16px;
+      font-size: 0.95rem;
+      transition: color 0.2s;
     }
 
-    .site-nav a:hover {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.05);
+    nav a:hover {
+      color: #fff;
     }
 
     .btn {
-      padding: 11px 22px;
-      border-radius: 12px;
+      padding: 10px 24px;
+      border-radius: 30px;
       text-decoration: none;
       font-weight: 600;
-      font-size: 0.92rem;
-      transition: transform 0.25s var(--ease-out), background 0.2s, border-color 0.2s, box-shadow 0.25s;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
       display: inline-block;
       cursor: pointer;
       border: none;
       text-align: center;
-      font-family: inherit;
     }
 
     .btn-primary {
-      background: var(--accent);
-      color: var(--accent-ink);
+      background: #fff;
+      color: #000;
+      box-shadow: 0 0 20px var(--glow);
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(200, 255, 77, 0.25);
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
     }
 
     .btn-outline {
-      border: 1px solid var(--line-strong);
-      color: var(--text);
-      background: transparent;
+      border: 1px solid var(--card-border);
+      color: #fff;
+      background: var(--card-bg);
     }
-
-    .btn-outline:hover {
-      border-color: rgba(255, 255, 255, 0.4);
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .btn-ghost {
-      color: var(--text);
-      background: transparent;
-      border: 1px solid transparent;
-    }
-
-    .btn-ghost:hover { color: var(--accent); }
 
     .auth-buttons-group {
       display: flex;
       gap: 10px;
-      align-items: center;
     }
 
-    .user-email {
-      color: var(--muted);
-      font-size: 0.82rem;
-      font-family: var(--font-mono);
-      max-width: 160px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    /* Бургер */
-    .burger {
-      display: none;
-      background: none;
-      border: 1px solid var(--line-strong);
-      border-radius: 10px;
-      width: 42px;
-      height: 42px;
-      cursor: pointer;
-      position: relative;
-      flex-shrink: 0;
-    }
-
-    .burger span,
-    .burger span::before,
-    .burger span::after {
-      content: '';
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 18px;
-      height: 2px;
-      background: var(--text);
-      border-radius: 2px;
-      transition: transform 0.3s var(--ease-out), opacity 0.2s;
-    }
-
-    .burger span { top: 50%; margin-top: -1px; }
-    .burger span::before { top: -6px; left: 0; transform: none; }
-    .burger span::after { top: 6px; left: 0; transform: none; }
-
-    .site-header.menu-open .burger span { background: transparent; }
-    .site-header.menu-open .burger span::before { transform: translateY(6px) rotate(45deg); }
-    .site-header.menu-open .burger span::after { transform: translateY(-6px) rotate(-45deg); }
-
-    /* ===== Герой ===== */
     .hero {
-      position: relative;
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      align-items: center;
-      gap: 56px;
-      padding: 88px 6% 72px;
-      max-width: 1280px;
-      margin: 0 auto;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -80px;
-      right: -60px;
-      width: 520px;
-      height: 520px;
-      background: radial-gradient(circle, rgba(200, 255, 77, 0.07) 0%, transparent 70%);
-      filter: blur(40px);
-      pointer-events: none;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      color: var(--muted);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 6px 14px;
-      margin-bottom: 28px;
-    }
-
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--accent);
-      animation: vb-q7x-pulse 2.4s infinite;
-    }
-
-    .hero h1 {
-      font-family: var(--font-head);
-      font-size: clamp(2.3rem, 5.4vw, 3.9rem);
-      font-weight: 700;
-      line-height: 1.08;
-      letter-spacing: -0.03em;
-      margin-bottom: 22px;
-      text-wrap: balance;
-    }
-
-    .hero h1 em {
-      font-style: normal;
-      color: var(--accent);
-    }
-
-    .hero-lead {
-      color: var(--muted);
-      font-size: 1.1rem;
-      margin-bottom: 34px;
-      max-width: 52ch;
-    }
-
-    .hero-cta {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    /* Панель-консоль с Лисом */
-    .hero-panel {
-      background: linear-gradient(180deg, var(--panel-2) 0%, var(--panel) 100%);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-    }
-
-    .hero-panel__bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 18px;
-      border-bottom: 1px solid var(--line);
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      padding: 80px 8%;
+      max-width: 1300px;
+      margin: 0 auto;
+      gap: 50px;
     }
 
-    .hero-panel__img {
+    .hero-content {
+      flex: 1.2;
+    }
+
+    .hero-visual {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .mascot-card {
       width: 100%;
-      height: 280px;
-      object-fit: cover;
-      display: block;
+      max-width: 420px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
     }
 
-    .hero-panel__rows {
-      padding: 18px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .stat-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: var(--font-mono);
-      font-size: 0.82rem;
-      padding: 10px 14px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-    }
-
-    .stat-row dt { color: var(--muted); }
-    .stat-row dd { color: var(--text); }
-    .stat-row dd.ok { color: var(--accent); }
-
-    /* ===== Секции ===== */
-    .section {
-      position: relative;
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 72px 6%;
-    }
-
-    .section-head {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 24px;
-      margin-bottom: 40px;
-      flex-wrap: wrap;
-    }
-
-    .section-head h2 {
-      font-family: var(--font-head);
-      font-size: clamp(1.7rem, 3.6vw, 2.4rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-      text-wrap: balance;
-    }
-
-    .section-head p {
-      color: var(--muted);
-      font-size: 0.98rem;
-      max-width: 42ch;
-    }
-
-    .kicker {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--accent);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-
-    /* ===== Возможности: асимметричная сетка ===== */
-    .features-grid {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      grid-template-rows: auto auto;
-      gap: 20px;
-    }
-
-    .feat {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 30px;
-      transition: border-color 0.3s ease, transform 0.3s var(--ease-out);
-    }
-
-    .feat:hover {
-      border-color: var(--line-strong);
-      transform: translateY(-4px);
-    }
-
-    .feat--lead {
-      grid-row: span 2;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 28px;
-      background:
-        radial-gradient(circle at 85% 15%, rgba(200, 255, 77, 0.08) 0%, transparent 55%),
-        var(--panel);
-    }
-
-    .feat__icon {
-      width: 44px;
-      height: 44px;
-      border: 1px solid var(--line-strong);
-      border-radius: 12px;
+    .mascot-emoji {
+      font-size: 5rem;
+      height: 200px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.3rem;
+      background: rgba(255,255,255,0.02);
+      border-radius: 16px;
       margin-bottom: 18px;
-      background: rgba(255, 255, 255, 0.03);
     }
 
-    .feat h3 {
-      font-family: var(--font-head);
+    .speech-bubble {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px 20px;
+      font-size: 1rem;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: 3.2rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 24px;
+      background: var(--gradient-silver);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-muted);
       font-size: 1.15rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-      letter-spacing: -0.01em;
+      margin-bottom: 36px;
     }
 
-    .feat p {
-      color: var(--muted);
-      font-size: 0.93rem;
-      max-width: 46ch;
+    .features {
+      padding: 80px 8%;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
-    .feat__metric {
-      font-family: var(--font-head);
-      font-size: clamp(3rem, 7vw, 4.6rem);
-      font-weight: 700;
-      line-height: 1;
-      letter-spacing: -0.04em;
+    .section-title {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 50px;
     }
 
-    .feat__metric span {
-      font-size: 1.1rem;
-      color: var(--muted);
-      font-family: var(--font-mono);
-      font-weight: 400;
-      letter-spacing: 0;
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
     }
 
-    /* ===== Тарифы ===== */
+    .pricing-with-mascot {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 80px 8%;
+    }
+
     .pricing-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      align-items: stretch;
+      gap: 24px;
+      flex: 2.5;
+    }
+
+    .pricing-mascot-side {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 32px;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+
+    .card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
     }
 
     .pricing-card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      padding: 32px 28px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.3s var(--ease-out), border-color 0.3s ease, box-shadow 0.3s ease;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 40px 30px;
+      text-align: center;
       position: relative;
+      cursor: pointer;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+                  border-color 0.35s ease, 
+                  box-shadow 0.35s ease, 
+                  background 0.35s ease;
     }
 
     .pricing-card:hover {
-      transform: translateY(-6px);
-      border-color: var(--line-strong);
-      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 255, 255, 0.08);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
     }
 
-    .pricing-card:focus-visible {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(200, 255, 77, 0.2);
+    .pricing-card.featured {
+      border-color: rgba(255, 255, 255, 0.3);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
     }
 
-    .pricing-card--featured {
-      border-color: rgba(200, 255, 77, 0.45);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(200, 255, 77, 0.08) 0%, transparent 60%),
-        var(--panel);
+    .pricing-price {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin: 20px 0;
     }
 
-    .plan-tag {
-      position: absolute;
-      top: -12px;
-      left: 28px;
-      background: var(--accent);
-      color: var(--accent-ink);
-      font-size: 0.72rem;
-      font-weight: 700;
-      font-family: var(--font-mono);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 5px 12px;
-      border-radius: 999px;
-    }
-
-    .plan-name {
-      font-family: var(--font-head);
-      font-size: 1.05rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .plan-radio {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 1.5px solid var(--line-strong);
-      flex-shrink: 0;
-      position: relative;
-      transition: border-color 0.2s;
-    }
-
-    .plan-radio::after {
-      content: '';
-      position: absolute;
-      inset: 3px;
-      border-radius: 50%;
-      background: var(--accent);
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .pricing-card:hover .plan-radio,
-    .pricing-card--featured .plan-radio {
-      border-color: var(--accent);
-    }
-
-    .pricing-card--featured .plan-radio::after { opacity: 1; }
-
-    .plan-price {
-      font-family: var(--font-head);
-      font-size: 2.3rem;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
-    .plan-price small {
-      font-size: 0.85rem;
-      color: var(--muted);
-      font-family: var(--font-mono);
-      font-weight: 400;
-      letter-spacing: 0;
-    }
-
-    .plan-note {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-bottom: 22px;
-    }
-
-    .plan-features {
-      list-style: none;
-      display: grid;
-      gap: 10px;
-      margin-bottom: 26px;
-      flex: 1;
-    }
-
-    .plan-features li {
-      color: var(--muted);
+    .pricing-price span {
       font-size: 0.9rem;
-      display: flex;
-      gap: 10px;
-      align-items: baseline;
+      color: var(--text-muted);
+      font-weight: 400;
     }
 
-    .plan-features li::before {
-      content: '→';
-      color: var(--accent);
-      font-family: var(--font-mono);
-      flex-shrink: 0;
+    .pricing-features {
+      list-style: none;
+      margin-top: 10px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
     }
 
-    .pricing-card .btn { width: 100%; }
-
-    .pricing-card .btn-outline {
-      background: rgba(255, 255, 255, 0.03);
+    .pricing-features li {
+      margin-bottom: 10px;
     }
 
-    .pricing-mascot {
-      margin-top: 40px;
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      padding: 22px;
+    .support-section {
+      text-align: center;
+      padding: 60px 8% 100px;
+      max-width: 850px;
+      margin: 0 auto;
     }
 
-    .pricing-mascot img {
-      width: 140px;
-      height: 140px;
-      object-fit: cover;
-      border-radius: var(--radius);
-      flex-shrink: 0;
-    }
-
-    .pricing-mascot p {
-      color: var(--muted);
-      font-size: 1rem;
-    }
-
-    .pricing-mascot p strong {
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    /* ===== Поддержка с Барсуком ===== */
     .support-card {
       display: flex;
       align-items: center;
       gap: 30px;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      padding: 26px;
-      margin-bottom: 28px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 30px;
+      text-align: left;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      margin-bottom: 30px;
     }
 
-    .support-card img {
-      width: 220px;
-      height: 220px;
-      object-fit: cover;
-      border-radius: var(--radius);
-      flex-shrink: 0;
-    }
-
-    .support-card__body { flex: 1; text-align: left; }
-
-    .support-card__body p {
-      color: var(--muted);
-      font-size: 1.05rem;
-      margin-bottom: 16px;
-      max-width: 46ch;
-    }
-
-    .support-hours {
-      display: inline-flex;
+    .support-emoji {
+      font-size: 5rem;
+      width: 200px;
+      height: 200px;
+      display: flex;
       align-items: center;
-      gap: 8px;
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      color: var(--accent);
-      border: 1px solid rgba(200, 255, 77, 0.3);
-      border-radius: 999px;
-      padding: 5px 12px;
+      justify-content: center;
+      background: rgba(255,255,255,0.02);
+      border-radius: 16px;
+      flex-shrink: 0;
     }
 
     .telegram-btn {
@@ -703,13 +367,13 @@
       gap: 10px;
       background: #229ed9;
       color: #fff;
-      padding: 14px 32px;
-      border-radius: 12px;
+      padding: 14px 36px;
+      border-radius: 30px;
       text-decoration: none;
       font-weight: 600;
-      font-size: 1rem;
-      transition: transform 0.25s var(--ease-out), background 0.3s ease;
-      box-shadow: 0 0 20px rgba(34, 158, 217, 0.3);
+      font-size: 1.05rem;
+      box-shadow: 0 0 20px rgba(34, 158, 217, 0.4);
+      transition: transform 0.3s ease, background 0.3s ease;
     }
 
     .telegram-btn:hover {
@@ -717,25 +381,18 @@
       background: #1f8bc2;
     }
 
-    .support-wrap {
-      text-align: center;
-      max-width: 900px;
-    }
-
-    /* ===== Модалка ===== */
     .modal-overlay {
       position: fixed;
-      inset: 0;
-      background: rgba(7, 8, 11, 0.82);
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(9, 10, 15, 0.8);
       backdrop-filter: blur(8px);
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: var(--z-modal);
+      z-index: 1000;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
-      padding: 20px;
     }
 
     .modal-overlay.active {
@@ -744,267 +401,368 @@
     }
 
     .modal {
-      background: var(--panel-2);
-      border: 1px solid var(--line-strong);
-      border-radius: var(--radius-lg);
+      background: #12151c;
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
       padding: 40px;
       width: 100%;
       max-width: 420px;
       position: relative;
-      transform: translateY(14px);
-      transition: transform 0.3s var(--ease-out);
     }
 
-    .modal-overlay.active .modal { transform: translateY(0); }
-
     .modal h2 {
-      font-family: var(--font-head);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       font-size: 1.5rem;
-      letter-spacing: -0.02em;
     }
 
     .modal-subtitle {
-      color: var(--muted);
+      color: var(--text-muted);
       font-size: 0.9rem;
       margin-bottom: 24px;
     }
 
-    .form-group { margin-bottom: 20px; }
+    .form-group {
+      margin-bottom: 20px;
+    }
 
     .form-group label {
       display: block;
-      color: #d3d7e0;
-      font-size: 0.88rem;
-      font-weight: 500;
+      color: var(--text-muted);
+      font-size: 0.9rem;
       margin-bottom: 8px;
-    }
-
-    .form-hint {
-      display: block;
-      color: var(--muted);
-      font-size: 0.78rem;
-      font-family: var(--font-mono);
-      margin-top: 6px;
     }
 
     .form-control {
       width: 100%;
       padding: 12px 16px;
       background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--line-strong);
+      border: 1px solid var(--card-border);
       border-radius: 10px;
-      color: var(--text);
+      color: #fff;
       font-size: 1rem;
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
     }
-
-    .form-control::placeholder { color: #626a7a; }
-
-    .form-control:focus {
-      border-color: rgba(200, 255, 77, 0.55);
-      box-shadow: 0 0 0 3px rgba(200, 255, 77, 0.12);
-    }
-
-    .form-control[aria-invalid="true"] {
-      border-color: rgba(255, 99, 99, 0.65);
-    }
-
-    .form-error {
-      display: none;
-      color: var(--danger);
-      font-size: 0.82rem;
-      margin-top: 8px;
-    }
-
-    .form-error.visible { display: block; }
 
     .close-modal {
       position: absolute;
-      top: 18px;
-      right: 18px;
+      top: 20px;
+      right: 20px;
       background: none;
       border: none;
-      color: var(--muted);
+      color: var(--text-muted);
       font-size: 1.2rem;
       cursor: pointer;
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      transition: color 0.2s, background 0.2s;
-    }
-
-    .close-modal:hover {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.06);
     }
 
     .switch-auth-text {
       text-align: center;
       margin-top: 16px;
-      color: var(--muted);
-      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
     }
 
-    .switch-auth-btn {
-      background: none;
-      border: none;
-      color: var(--accent);
+    .switch-auth-text span {
+      color: #fff;
       cursor: pointer;
       text-decoration: underline;
-      font-size: 0.88rem;
-      font-family: inherit;
-      padding: 0;
     }
 
-    /* ===== Тост ===== */
-    .toast {
+    #toast {
       position: fixed;
       bottom: 30px;
       right: 30px;
-      background: var(--accent);
-      color: var(--accent-ink);
-      padding: 15px 22px;
+      background: #ffffff;
+      color: #000;
+      padding: 16px 24px;
       border-radius: 12px;
       font-weight: 600;
-      font-size: 0.92rem;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
-      transform: translateY(160px);
-      transition: transform 0.35s var(--ease-out);
-      z-index: var(--z-toast);
-      max-width: min(340px, calc(100vw - 60px));
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transform: translateY(150px);
+      transition: transform 0.3s ease;
+      z-index: 1100;
     }
 
-    .toast.show { transform: translateY(0); }
-
-    /* ===== Футер ===== */
-    .site-footer {
-      border-top: 1px solid var(--line);
-      padding: 36px 6%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      color: var(--muted);
-      font-size: 0.85rem;
+    #toast.show {
+      transform: translateY(0);
     }
 
-    .site-footer .logo { font-size: 1rem; }
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 40px 8%;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
 
-    /* ===== Адаптив ===== */
-    @media (max-width: 960px) {
-      .site-header {
-        padding: 14px 5%;
-        flex-wrap: wrap;
-        gap: 12px;
-      }
-
-      .burger { display: block; margin-left: auto; }
-
-      .site-nav {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0;
-        background: rgba(10, 12, 17, 0.98);
-        backdrop-filter: blur(14px);
-        border-bottom: 1px solid var(--line);
-        padding: 8px 5% 16px;
-        z-index: var(--z-mobile-menu);
-      }
-
-      .site-header.menu-open .site-nav { display: flex; }
-
-      .site-nav a {
-        padding: 14px 12px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 0;
-      }
-
-      .hero {
-        grid-template-columns: 1fr;
-        padding: 56px 5% 48px;
-        gap: 44px;
-        text-align: center;
-      }
-
-      .hero-lead { margin-left: auto; margin-right: auto; }
-      .hero-cta { justify-content: center; }
-      .eyebrow { margin-left: auto; margin-right: auto; }
-      .hero::before { display: none; }
-
-      .features-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .feat--lead { grid-row: auto; }
-
+    @media (max-width: 900px) {
+      .hero { flex-direction: column; text-align: center; }
+      .pricing-with-mascot { flex-direction: column-reverse; }
       .pricing-grid { grid-template-columns: 1fr; }
-
-      .support-card {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .support-card img { width: 100%; height: 240px; }
-      .support-card__body { text-align: center; }
-      .support-card__body p { margin-left: auto; margin-right: auto; }
-
-      .section { padding: 56px 5%; }
-
-      .site-footer { justify-content: center; text-align: center; }
-    }
-
-    @media (max-width: 520px) {
-      .auth-buttons-group .btn {
-        padding: 9px 14px;
-        font-size: 0.85rem;
-      }
-
-      .user-email { display: none; }
-
-      .modal { padding: 32px 22px; }
-
-      .toast {
-        right: 16px;
-        left: 16px;
-        bottom: 16px;
-        max-width: none;
-      }
-
-      .pricing-mascot { flex-direction: column; text-align: center; }
-
-      .feat { padding: 24px; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-
-      *,
-      *::before,
-      *::after {
-        transition-duration: 0.01ms !important;
-        animation-duration: 0.01ms !important;
-      }
-
-      .js .reveal {
-        opacity: 1;
-        transform: none;
-      }
+      .support-card { flex-direction: column; text-align: center; }
+      nav { display: none; }
     }
   </style>
 </head>
 <body>
 
+  <div class="bg-glow"></div>
+
   <!-- Навигация -->
-  <header class="site-header" id="site-header">
+  <header>
     <a href="index.html" class="logo">
-      <div class="logo-icon" aria-hidden="true">Q</div>
+      <div class="logo-icon">Q</div>
       <span>QuarkVPN</span>
     </a>
+    <nav>
+      <a href="index.html#features">Возможности</a>
+      <a href="index.html#pricing">Тарифы</a>
+      <a href="index.html#support">Поддержка</a>
+    </nav>
+    <div id="auth-nav-container">
+      <div class="auth-buttons-group">
+        <button class="btn btn-outline" onclick="openModal('login')">Войти</button>
+        <button class="btn btn-primary" onclick="openModal('register')">Регистрация</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Главный экран с Лисом -->
+  <section class="hero">
+    <div class="hero-visual">
+      <div class="mascot-card">
+        <div class="mascot-emoji">🦊</div>
+        <div class="speech-bubble">«Привет! Я расскажу, как сделать твой интернет быстрым и безопасным!»</div>
+      </div>
+    </div>
+    <div class="hero-content">
+      <div class="badge">Next-Gen Privacy Protocol</div>
+      <h1>Твоя цифровая тень.<br>Быстро. Анонимно. Надежно.</h1>
+      <p>QuarkVPN шифрует трафик с использованием современных протоколов нового поколения. Полное отсутствие логов и максимальная пропускная способность.</p>
+      <button class="btn btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior: 'smooth'})">Выбрать тариф</button>
+    </div>
+  </section>
+
+  <!-- Преимущества -->
+  <section class="features" id="features">
+    <h2 class="section-title">Почему именно QuarkVPN</h2>
+    <div class="features-grid">
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>До 10 Гбит/с</h3>
+        <p>Выделенные высокоскоростные серверы без троттлинга и ограничений по трафику.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🛡️</div>
+        <h3>Zero-Logs Политика</h3>
+        <p>Мы не собираем, не логируем и физически не храним информацию о ваших сессиях.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <h3>Обход любых блокировок</h3>
+        <p>Маскировка под обычный HTTPS трафик, что делает подключение невидимым для фильтрации провайдера.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Тарифы с Хорьком -->
+  <section class="pricing" id="pricing">
+    <h2 class="section-title">Выберите подходящий план</h2>
+    <div class="pricing-with-mascot">
+      <div class="pricing-grid">
+        <div class="pricing-card" onclick="goToPay('1 месяц', 199, 3)">
+          <h3>1 Месяц</h3>
+          <div class="pricing-price">₽199 <span>/ мес</span></div>
+          <ul class="pricing-features">
+            <li>До 3 устройств</li>
+            <li>Большинство локаций</li>
+          </ul>
+        </div>
+        <div class="pricing-card" onclick="goToPay('3 месяца', 350, 5)">
+          <div class="badge" style="margin-bottom: 10px;">Выгоднее</div>
+          <h3>3 Месяца</h3>
+          <div class="pricing-price">₽350 <span>/ мес</span></div>
+          <ul class="pricing-features">
+            <li>До 5 устройств</li>
+            <li>Большинство локаций</li>
+          </ul>
+        </div>
+        <div class="pricing-card featured" onclick="goToPay('6 месяцев', 800, 10)">
+          <div class="badge" style="margin-bottom: 10px; background: rgba(76,209,55,0.1); color: #4cd137; border-color: rgba(76,209,55,0.3);">Максимум</div>
+          <h3>6 Месяцев</h3>
+          <div class="pricing-price">₽800 <span>/ период</span></div>
+          <ul class="pricing-features">
+            <li>До 10 устройств</li>
+            <li>Все локации и скорость</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pricing-mascot-side">
+        <div class="mascot-card">
+          <div class="mascot-emoji">🦦</div>
+          <div class="speech-bubble">«Выбирай любой план, подключайся и лети на максимальной скорости!»</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Поддержка с Барсуком -->
+  <section class="support-section" id="support">
+    <h2 class="section-title" style="margin-bottom: 30px;">Остались вопросы?</h2>
+    <div class="support-card">
+      <div class="support-emoji">🦡</div>
+      <div class="speech-bubble" style="flex: 1; font-size: 1.1rem;">
+        «В случае каких-то вопросов или проблем смело обращайтесь к нам в официальную поддержку. Мы на связи 24/7!»
+      </div>
+    </div>
+    <a href="https://t.me/your_telegram_bot" target="_blank" class="telegram-btn">
+      💬 Написать в Telegram-бот
+    </a>
+  </section>
+
+  <!-- Модальное окно -->
+  <div class="modal-overlay" id="auth-modal" onclick="handleModalClick(event)">
+    <div class="modal">
+      <button class="close-modal" onclick="closeModal()">✕</button>
+      <h2 id="modal-heading">Вход в аккаунт</h2>
+      <p class="modal-subtitle" id="modal-subtext">Введите ваши данные для входа</p>
+      
+      <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="auth-email" class="form-control" placeholder="name@example.com" required>
+        </div>
+        <div class="form-group">
+          <label>Пароль</label>
+          <input type="password" id="auth-password" class="form-control" placeholder="••••••••" required>
+        </div>
+        <button type="submit" id="modal-submit-btn" class="btn btn-primary" style="width: 100%;">Войти</button>
+      </form>
+
+      <div class="switch-auth-text" id="switch-text">
+        Нет аккаунта? <span onclick="toggleAuthMode()">Зарегистрироваться</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast">Успешно!</div>
+
+  <footer>
+    <p>© 2026 QuarkVPN. Все права защищены. Безопасность превыше всего.</p>
+  </footer>
+
+  <script>
+    let usersDB = JSON.parse(localStorage.getItem('quark_users_db')) || {};
+    let currentEmail = localStorage.getItem('quark_current_user') || null;
+    let currentMode = 'login';
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateUIState();
+    });
+
+    function openModal(mode) {
+      currentMode = mode;
+      updateModalView();
+      document.getElementById('auth-modal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('auth-modal').classList.remove('active');
+    }
+
+    function handleModalClick(e) {
+      if (e.target.id === 'auth-modal') closeModal();
+    }
+
+    function toggleAuthMode() {
+      currentMode = currentMode === 'login' ? 'register' : 'login';
+      updateModalView();
+    }
+
+    function updateModalView() {
+      const heading = document.getElementById('modal-heading');
+      const subtext = document.getElementById('modal-subtext');
+      const submitBtn = document.getElementById('modal-submit-btn');
+      const switchText = document.getElementById('switch-text');
+
+      if (currentMode === 'login') {
+        heading.textContent = 'Вход в аккаунт';
+        subtext.textContent = 'Введите ваши данные для входа';
+        submitBtn.textContent = 'Войти';
+        switchText.innerHTML = 'Нет аккаунта? <span onclick="toggleAuthMode()">Зарегистрироваться</span>';
+      } else {
+        heading.textContent = 'Регистрация аккаунта';
+        subtext.textContent = 'Создайте новый профиль в системе';
+        submitBtn.textContent = 'Зарегистрироваться';
+        switchText.innerHTML = 'Уже есть аккаунт? <span onclick="toggleAuthMode()">Войти</span>';
+      }
+    }
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('auth-email').value.trim().toLowerCase();
+      const password = document.getElementById('auth-password').value;
+
+      if (currentMode === 'login') {
+        if (!usersDB[email]) {
+          showToast('Ошибка: аккаунт не найден!');
+          return;
+        }
+        if (usersDB[email].password !== password) {
+          showToast('Ошибка: неверный пароль!');
+          return;
+        }
+        showToast('Вход выполнен успешно!');
+      } else {
+        if (usersDB[email]) {
+          showToast('Ошибка: этот email уже зарегистрирован!');
+          return;
+        }
+        usersDB[email] = { 
+          email: email, 
+          password: password, 
+          subscription: null, 
+          devices: [] 
+        };
+        localStorage.setItem('quark_users_db', JSON.stringify(usersDB));
+        showToast('Аккаунт успешно создан!');
+      }
+
+      currentEmail = email;
+      localStorage.setItem('quark_current_user', currentEmail);
+      closeModal();
+      updateUIState();
+    }
+
+    function updateUIState() {
+      const authContainer = document.getElementById('auth-nav-container');
+      if (currentEmail) {
+        authContainer.innerHTML = `<a href="dashboard.html" class="btn btn-outline">Личный кабинет</a>`;
+      } else {
+        authContainer.innerHTML = `
+          <div class="auth-buttons-group">
+            <button class="btn btn-outline" onclick="openModal('login')">Войти</button>
+            <button class="btn btn-primary" onclick="openModal('register')">Регистрация</button>
+          </div>
+        `;
+      }
+    }
+
+    function goToPay(planName, price, limit) {
+      if (!currentEmail) {
+        showToast('Сначала войдите или зарегистрируйтесь!');
+        openModal('login');
+        return;
+      }
+      localStorage.setItem('quark_selected_plan', JSON.stringify({ name: planName, price: price, limit: limit }));
+      window.location.href = 'pay.html';
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      toast.textContent = text;
+      toast.classList.add('show');
+      setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
+  </script>
+</body>
+</html>
