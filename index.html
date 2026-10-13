@@ -75,17 +75,16 @@
     }
 
     .logo-icon {
-      width: 36px;
-      height: 36px;
-      background: linear-gradient(135deg, #ffffff 0%, #8e95a5 100%);
-      color: #090a0f;
-      border-radius: 10px;
+      width: 34px;
+      height: 34px;
+      background: #fff;
+      color: #000;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 1.2rem;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+      font-size: 1.1rem;
     }
 
     nav a {
@@ -135,6 +134,7 @@
       gap: 10px;
     }
 
+    /* Главный экран с персонажами */
     .hero {
       display: flex;
       align-items: center;
@@ -203,7 +203,7 @@
       margin-bottom: 36px;
     }
 
-    .features {
+    .features, .characters-section {
       padding: 80px 8%;
       max-width: 1200px;
       margin: 0 auto;
@@ -215,7 +215,7 @@
       margin-bottom: 50px;
     }
 
-    .features-grid {
+    .features-grid, .characters-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 24px;
@@ -386,4 +386,315 @@
 
     .switch-auth-text {
       text-align: center;
-      margin-top
+      margin-top: 16px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .switch-auth-text span {
+      color: #fff;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #ffffff;
+      color: #000;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transform: translateY(150px);
+      transition: transform 0.3s ease;
+      z-index: 1100;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+    }
+
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 40px 8%;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero { flex-direction: column; text-align: center; }
+      .hero-content { text-align: center; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-glow"></div>
+
+  <!-- Навигация -->
+  <header>
+    <a href="index.html" class="logo">
+      <div class="logo-icon">Q</div>
+      <span>QuarkVPN</span>
+    </a>
+    <nav>
+      <a href="index.html#features">Возможности</a>
+      <a href="index.html#characters">Маскоты</a>
+      <a href="index.html#pricing">Тарифы</a>
+    </nav>
+    <div id="auth-nav-container">
+      <div class="auth-buttons-group">
+        <button class="btn btn-outline" onclick="openModal('login')">Войти</button>
+        <button class="btn btn-primary" onclick="openModal('register')">Регистрация</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Главный экран с персонажами -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="badge">Next-Gen Privacy Protocol</div>
+      <h1>Твоя цифровая тень.<br>Быстро. Анонимно. Надежно.</h1>
+      <p>QuarkVPN шифрует трафик с использованием современных протоколов нового поколения (VLESS / WireGuard). Полное отсутствие логов и максимальная пропускная способность.</p>
+      <button class="btn btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior: 'smooth'})">Выбрать тариф</button>
+    </div>
+    <div class="hero-visual">
+      <div class="characters-banner">
+        <img src="characters.png" alt="Персонажи QuarkVPN">
+      </div>
+    </div>
+  </section>
+
+  <!-- Секция маскотов -->
+  <section class="characters-section" id="characters">
+    <h2 class="section-title">Хранители вашей безопасности</h2>
+    <div class="characters-grid">
+      <div class="card" style="text-align: center;">
+        <h3>🦊 Квантовый Лис</h3>
+        <p>Отвечает за молниеносную скорость соединения и обход любых сетевых преград.</p>
+      </div>
+      <div class="card" style="text-align: center;">
+        <h3>🦦 Хорёк-Связист</h3>
+        <p>Гарантирует стабильность туннелей и бесперебойную работу во всех локациях.</p>
+      </div>
+      <div class="card" style="text-align: center;">
+        <h3>🦡 Барсук-Страж</h3>
+        <p>Обеспечивает железобетонную защиту ваших данных и политику Zero-Logs.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Преимущества -->
+  <section class="features" id="features">
+    <h2 class="section-title">Почему именно QuarkVPN</h2>
+    <div class="features-grid">
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>До 10 Гбит/с</h3>
+        <p>Выделенные высокоскоростные серверы без троттлинга и ограничений по трафику.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🛡️</div>
+        <h3>Zero-Logs Политика</h3>
+        <p>Мы не собираем, не логируем и физически не храним информацию о ваших сессиях.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <h3>Обход любых блокировок</h3>
+        <p>Маскировка под обычный HTTPS трафик, что делает подключение невидимым для фильтрации провайдера.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Тарифы (в одну строку) -->
+  <section class="pricing" id="pricing">
+    <h2 class="section-title">Выберите подходящий план</h2>
+    <div class="pricing-grid">
+
+      <!-- Карточка 1: 1 месяц -->
+      <div class="pricing-card" onclick="goToPay('1 месяц', 199, 3)">
+        <h3>1 Месяц</h3>
+        <div class="pricing-price">₽199 <span>/ мес</span></div>
+        <ul class="pricing-features">
+          <li>До 3 устройств</li>
+          <li>Большинство локаций</li>
+        </ul>
+      </div>
+
+      <!-- Карточка 2: 3 месяца -->
+      <div class="pricing-card" onclick="goToPay('3 месяца', 350, 5)">
+        <div class="badge" style="margin-bottom: 10px;">Выгоднее</div>
+        <h3>3 Месяца</h3>
+        <div class="pricing-price">₽350 <span>/ мес</span></div>
+        <ul class="pricing-features">
+          <li>До 5 устройств</li>
+          <li>Большинство локаций</li>
+        </ul>
+      </div>
+
+      <!-- Карточка 3: 6 месяцев -->
+      <div class="pricing-card featured" onclick="goToPay('6 месяцев', 800, 10)">
+        <div class="badge" style="margin-bottom: 10px; background: rgba(76,209,55,0.1); color: #4cd137; border-color: rgba(76,209,55,0.3);">Максимум</div>
+        <h3>6 Месяцев</h3>
+        <div class="pricing-price">₽800 <span>/ период</span></div>
+        <ul class="pricing-features">
+          <li>До 10 устройств</li>
+          <li>Все локации и скорость</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Модальное окно авторизации/регистрации -->
+  <div class="modal-overlay" id="auth-modal" onclick="handleModalClick(event)">
+    <div class="modal">
+      <button class="close-modal" onclick="closeModal()">✕</button>
+      <h2 id="modal-heading">Вход в аккаунт</h2>
+      <p class="modal-subtitle" id="modal-subtext">Введите ваши данные для входа</p>
+
+      <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="auth-email" class="form-control" placeholder="name@example.com" required>
+        </div>
+        <div class="form-group">
+          <label>Пароль</label>
+          <input type="password" id="auth-password" class="form-control" placeholder="••••••••" required>
+        </div>
+        <button type="submit" id="modal-submit-btn" class="btn btn-primary" style="width: 100%;">Войти</button>
+      </form>
+
+      <div class="switch-auth-text" id="switch-text">
+        Нет аккаунта? <span onclick="toggleAuthMode()">Зарегистрироваться</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast">Успешно!</div>
+
+  <footer>
+    <p>© 2026 QuarkVPN. Все права защищены. Безопасность превыше всего.</p>
+  </footer>
+
+  <script>
+    let usersDB = JSON.parse(localStorage.getItem('quark_users_db')) || {};
+    let currentEmail = localStorage.getItem('quark_current_user') || null;
+    let currentMode = 'login';
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateUIState();
+    });
+
+    function openModal(mode) {
+      currentMode = mode;
+      updateModalView();
+      document.getElementById('auth-modal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('auth-modal').classList.remove('active');
+    }
+
+    function handleModalClick(e) {
+      if (e.target.id === 'auth-modal') closeModal();
+    }
+
+    function toggleAuthMode() {
+      currentMode = currentMode === 'login' ? 'register' : 'login';
+      updateModalView();
+    }
+
+    function updateModalView() {
+      const heading = document.getElementById('modal-heading');
+      const subtext = document.getElementById('modal-subtext');
+      const submitBtn = document.getElementById('modal-submit-btn');
+      const switchText = document.getElementById('switch-text');
+
+      if (currentMode === 'login') {
+        heading.textContent = 'Вход в аккаунт';
+        subtext.textContent = 'Введите ваши данные для входа';
+        submitBtn.textContent = 'Войти';
+        switchText.innerHTML = 'Нет аккаунта? <span onclick="toggleAuthMode()">Зарегистрироваться</span>';
+      } else {
+        heading.textContent = 'Регистрация аккаунта';
+        subtext.textContent = 'Создайте новый профиль в системе';
+        submitBtn.textContent = 'Зарегистрироваться';
+        switchText.innerHTML = 'Уже есть аккаунт? <span onclick="toggleAuthMode()">Войти</span>';
+      }
+    }
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('auth-email').value.trim().toLowerCase();
+      const password = document.getElementById('auth-password').value;
+
+      if (currentMode === 'login') {
+        if (!usersDB[email]) {
+          showToast('Ошибка: аккаунт не найден!');
+          return;
+        }
+        if (usersDB[email].password !== password) {
+          showToast('Ошибка: неверный пароль!');
+          return;
+        }
+        showToast('Вход выполнен успешно!');
+      } else {
+        if (usersDB[email]) {
+          showToast('Ошибка: этот email уже зарегистрирован!');
+          return;
+        }
+        usersDB[email] = { 
+          email: email, 
+          password: password, 
+          subscription: null, 
+          devices: [] 
+        };
+        localStorage.setItem('quark_users_db', JSON.stringify(usersDB));
+        showToast('Аккаунт успешно создан!');
+      }
+
+      currentEmail = email;
+      localStorage.setItem('quark_current_user', currentEmail);
+      closeModal();
+      updateUIState();
+    }
+
+    function updateUIState() {
+      const authContainer = document.getElementById('auth-nav-container');
+      if (currentEmail) {
+        authContainer.innerHTML = `<a href="dashboard.html" class="btn btn-outline">Личный кабинет</a>`;
+      } else {
+        authContainer.innerHTML = `
+          <div class="auth-buttons-group">
+            <button class="btn btn-outline" onclick="openModal('login')">Войти</button>
+            <button class="btn btn-primary" onclick="openModal('register')">Регистрация</button>
+          </div>
+        `;
+      }
+    }
+
+    function goToPay(planName, price, limit) {
+      if (!currentEmail) {
+        showToast('Сначала войдите или зарегистрируйтесь!');
+        openModal('login');
+        return;
+      }
+      localStorage.setItem('quark_selected_plan', JSON.stringify({ name: planName, price: price, limit: limit }));
+      window.location.href = 'pay.html';
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      toast.textContent = text;
+      toast.classList.add('show');
+      setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
+  </script>
+</body>
+</html>
