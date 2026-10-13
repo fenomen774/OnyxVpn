@@ -49,7 +49,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 24px 8%;
+      padding: 20px 8%;
       border-bottom: 1px solid var(--card-border);
       backdrop-filter: blur(12px);
       position: sticky;
@@ -57,34 +57,15 @@
       z-index: 100;
     }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 1.3rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      color: #fff;
-      text-decoration: none;
-      cursor: pointer;
+    .logo-img {
+      height: 40px;
+      width: auto;
+      display: block;
       transition: opacity 0.2s;
     }
 
-    .logo:hover {
+    .logo-img:hover {
       opacity: 0.85;
-    }
-
-    .logo-icon {
-      width: 34px;
-      height: 34px;
-      background: #fff;
-      color: #000;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1.1rem;
     }
 
     nav a {
@@ -135,10 +116,44 @@
     }
 
     .hero {
-      text-align: center;
-      padding: 100px 8% 80px;
-      max-width: 900px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 80px 8%;
+      max-width: 1300px;
       margin: 0 auto;
+      gap: 50px;
+    }
+
+    .hero-content {
+      flex: 1.2;
+      text-align: left;
+    }
+
+    .hero-visual {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .characters-banner {
+      width: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      transition: transform 0.3s ease;
+    }
+
+    .characters-banner:hover {
+      transform: scale(1.02);
+    }
+
+    .characters-banner img {
+      width: 100%;
+      height: auto;
+      display: block;
     }
 
     .badge {
@@ -153,7 +168,7 @@
     }
 
     .hero h1 {
-      font-size: 3.5rem;
+      font-size: 3.2rem;
       font-weight: 800;
       line-height: 1.15;
       margin-bottom: 24px;
@@ -164,7 +179,7 @@
 
     .hero p {
       color: var(--text-muted);
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       margin-bottom: 36px;
     }
 
@@ -390,8 +405,9 @@
     }
 
     @media (max-width: 900px) {
+      .hero { flex-direction: column; text-align: center; }
+      .hero-content { text-align: center; }
       .pricing-grid { grid-template-columns: 1fr; }
-      .hero h1 { font-size: 2.4rem; }
       nav { display: none; }
     }
   </style>
@@ -400,14 +416,14 @@
 
   <div class="bg-glow"></div>
 
-  <!-- Навигация -->
+  <!-- Навигация с вашим новым логотипом -->
   <header>
-    <a href="index.html" class="logo">
-      <div class="logo-icon">Q</div>
-      <span>QuarkVPN</span>
+    <a href="index.html">
+      <img src="logo.png" alt="QuarkVPN" class="logo-img">
     </a>
     <nav>
       <a href="index.html#features">Возможности</a>
+      <a href="index.html#characters">Маскоты</a>
       <a href="index.html#pricing">Тарифы</a>
     </nav>
     <div id="auth-nav-container">
@@ -418,11 +434,38 @@
     </div>
   </header>
 
-  <!-- Главный экран -->
+  <!-- Главный экран с персонажами -->
   <section class="hero">
-    <div class="badge">Next-Gen Privacy Protocol</div>
-    <h1>Твоя цифровая тень.<br>Быстро. Анонимно. Надежно.</h1>
-    <p>QuarkVPN шифрует трафик с использованием современных протоколов нового поколения (VLESS / WireGuard). Полное отсутствие логов и максимальная пропускная способность.</p>
+    <div class="hero-content">
+      <div class="badge">Next-Gen Privacy Protocol</div>
+      <h1>Твоя цифровая тень.<br>Быстро. Анонимно. Надежно.</h1>
+      <p>QuarkVPN шифрует трафик с использованием современных протоколов нового поколения. Полное отсутствие логов и максимальная пропускная способность.</p>
+      <button class="btn btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior: 'smooth'})">Выбрать тариф</button>
+    </div>
+    <div class="hero-visual">
+      <div class="characters-banner">
+        <img src="characters.png" alt="Персонажи QuarkVPN">
+      </div>
+    </div>
+  </section>
+
+  <!-- Секция с описанием маскотов -->
+  <section class="features" id="characters">
+    <h2 class="section-title">Хранители вашей безопасности</h2>
+    <div class="features-grid">
+      <div class="card" style="text-align: center;">
+        <h3>🦊 Квантовый Лис</h3>
+        <p>Отвечает за молниеносную скорость соединения и обход любых сетевых преград.</p>
+      </div>
+      <div class="card" style="text-align: center;">
+        <h3>🦦 Хорёк-Связист</h3>
+        <p>Гарантирует стабильность туннелей и бесперебойную работу во всех локациях.</p>
+      </div>
+      <div class="card" style="text-align: center;">
+        <h3>🦡 Барсук-Страж</h3>
+        <p>Обеспечивает железобетонную защиту ваших данных и политику Zero-Logs.</p>
+      </div>
+    </div>
   </section>
 
   <!-- Преимущества -->
