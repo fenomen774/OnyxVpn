@@ -164,13 +164,14 @@
     }
 
     .btn-primary {
-      background: var(--accent);
+      background: linear-gradient(180deg, #d6ff6b 0%, var(--accent) 55%);
       color: var(--accent-ink);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(200, 255, 77, 0.25);
+      box-shadow: 0 10px 30px rgba(200, 255, 77, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.35);
     }
 
     .btn-outline {
@@ -325,7 +326,7 @@
       border: 1px solid var(--line);
       border-radius: var(--radius-lg);
       overflow: hidden;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 60px rgba(200, 255, 77, 0.06);
     }
 
     .hero-panel__bar {
@@ -339,36 +340,74 @@
       color: var(--muted);
       letter-spacing: 0.06em;
       text-transform: uppercase;
+      background: rgba(200, 255, 77, 0.04);
     }
 
-    .hero-panel__img {
-      width: 100%;
-      height: 260px;
-      object-fit: cover;
-      display: block;
-    }
-
-    .hero-panel__rows {
-      padding: 18px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .stat-row {
+    /* ===== Маскоты: единый блок для Лиса, Хорька и Барсука ===== */
+    .mascot {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      font-family: var(--font-mono);
-      font-size: 0.82rem;
-      padding: 10px 14px;
-      background: rgba(255, 255, 255, 0.03);
+      gap: 24px;
+      background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 10px;
+      border-radius: var(--radius-lg);
+      padding: 24px;
     }
 
-    .stat-row dt { color: var(--muted); }
-    .stat-row dd { color: var(--text); }
-    .stat-row dd.ok { color: var(--accent); }
+    /* Вариант внутри панели героя: без собственной «карточки», по центру */
+    .mascot--bare {
+      background: none;
+      border: none;
+      border-radius: 0;
+      padding: 22px;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .mascot__img {
+      width: 160px;
+      height: 160px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      border: 1px solid var(--line-strong);
+      flex-shrink: 0;
+    }
+
+    .mascot__body {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .mascot--bare .mascot__body { align-items: center; }
+
+    .mascot__name {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .mascot__quote {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 58ch;
+    }
+
+    .mascot__tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--accent);
+      border: 1px solid rgba(200, 255, 77, 0.3);
+      border-radius: 999px;
+      padding: 5px 12px;
+    }
 
     /* ===== Секции ===== */
     .section {
@@ -439,7 +478,7 @@
       justify-content: space-between;
       gap: 28px;
       background:
-        radial-gradient(circle at 85% 15%, rgba(200, 255, 77, 0.08) 0%, transparent 55%),
+        radial-gradient(circle at 20% 90%, rgba(200, 255, 77, 0.1) 0%, transparent 55%),
         var(--panel);
     }
 
@@ -519,17 +558,18 @@
     }
 
     .pricing-card--featured {
-      border-color: rgba(200, 255, 77, 0.45);
+      border-color: rgba(200, 255, 77, 0.5);
       background:
-        radial-gradient(circle at 50% 0%, rgba(200, 255, 77, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 50% -10%, rgba(200, 255, 77, 0.12) 0%, transparent 65%),
         var(--panel);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.4), 0 0 44px rgba(200, 255, 77, 0.08);
     }
 
     .plan-tag {
       position: absolute;
       top: -12px;
       left: 28px;
-      background: var(--accent);
+      background: linear-gradient(180deg, #d6ff6b, var(--accent));
       color: var(--accent-ink);
       font-size: 0.72rem;
       font-weight: 700;
@@ -538,6 +578,7 @@
       text-transform: uppercase;
       padding: 5px 12px;
       border-radius: 999px;
+      box-shadow: 0 6px 16px rgba(200, 255, 77, 0.3);
     }
 
     .plan-name {
@@ -630,75 +671,10 @@
       background: rgba(255, 255, 255, 0.03);
     }
 
-    .pricing-mascot {
-      margin-top: 40px;
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      padding: 22px;
-    }
-
-    .pricing-mascot img {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      border-radius: var(--radius);
-      flex-shrink: 0;
-    }
-
-    .pricing-mascot p {
-      color: var(--muted);
-      font-size: 1rem;
-    }
-
-    .pricing-mascot p strong {
-      color: var(--text);
-      font-weight: 600;
-    }
+    #pricing .mascot { margin-top: 40px; }
 
     /* ===== Поддержка ===== */
-    .support-card {
-      display: flex;
-      align-items: center;
-      gap: 30px;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      padding: 26px;
-      margin-bottom: 28px;
-    }
-
-    .support-card img {
-      width: 220px;
-      height: 220px;
-      object-fit: cover;
-      border-radius: var(--radius);
-      flex-shrink: 0;
-    }
-
-    .support-card__body { flex: 1; }
-
-    .support-card__body p {
-      color: var(--muted);
-      font-size: 1.05rem;
-      margin-bottom: 16px;
-      max-width: 46ch;
-    }
-
-    .support-hours {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      color: var(--accent);
-      border: 1px solid rgba(200, 255, 77, 0.3);
-      border-radius: 999px;
-      padding: 5px 12px;
-    }
+    .support-wrap .mascot { margin-bottom: 28px; }
 
     .telegram-btn {
       display: inline-flex;
@@ -864,13 +840,14 @@
       position: fixed;
       bottom: 30px;
       right: 30px;
-      background: var(--accent);
-      color: var(--accent-ink);
+      background: rgba(16, 19, 26, 0.96);
+      color: var(--text);
+      border: 1px solid rgba(200, 255, 77, 0.4);
       padding: 15px 22px;
       border-radius: 12px;
       font-weight: 600;
       font-size: 0.92rem;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55), 0 0 28px rgba(200, 255, 77, 0.12);
       transform: translateY(160px);
       transition: transform 0.35s var(--ease-out);
       z-index: var(--z-toast);
@@ -948,13 +925,12 @@
 
       .pricing-grid { grid-template-columns: 1fr; }
 
-      .support-card {
+      .mascot {
         flex-direction: column;
         text-align: center;
       }
 
-      .support-card img { width: 100%; height: 240px; }
-      .support-card__body p { margin-left: auto; margin-right: auto; }
+      .mascot__body { align-items: center; }
 
       .section { padding: 56px 5%; }
 
@@ -977,8 +953,6 @@
         bottom: 16px;
         max-width: none;
       }
-
-      .pricing-mascot { flex-direction: column; text-align: center; }
 
       .feat { padding: 24px; }
     }
@@ -1052,21 +1026,14 @@
         <span>quark://node-04</span>
         <span>защищено</span>
       </div>
-      <img class="hero-panel__img" src="fox.png" alt="Квантовый Лис — талисман QuarkVPN">
-      <dl class="hero-panel__rows">
-        <div class="stat-row">
-          <dt>Статус</dt>
-          <dd class="ok">● Защищено</dd>
+      <div class="mascot mascot--bare">
+        <img class="mascot__img" src="fox.png" alt="Лис-Проводник — талисман QuarkVPN">
+        <div class="mascot__body">
+          <p class="mascot__name">Лис-Проводник</p>
+          <p class="mascot__quote">«Я знаю каждую тропу между тобой и интернетом — иду впереди, чтобы следов не осталось. Шагай следом.»</p>
+          <span class="mascot__tag"><span class="status-dot" aria-hidden="true"></span> 47 локаций · маршрут проложен</span>
         </div>
-        <div class="stat-row">
-          <dt>Скорость</dt>
-          <dd>942 Мбит/с</dd>
-        </div>
-        <div class="stat-row">
-          <dt>Узел</dt>
-          <dd>Амстердам · 12 мс</dd>
-        </div>
-      </dl>
+      </div>
     </div>
   </section>
 
@@ -1118,10 +1085,10 @@
 
       <div class="pricing-card reveal" role="button" tabindex="0"
            data-plan-name="1 месяц" data-plan-price="199" data-plan-limit="3"
-           aria-label="Тариф 1 месяц, 199 рублей в месяц, до 3 устройств">
+           aria-label="Тариф 1 месяц, 199 рублей, до 3 устройств">
         <div class="plan-name"><span class="plan-radio" aria-hidden="true"></span> Старт</div>
-        <div class="plan-price">₽199 <small>/ мес</small></div>
-        <div class="plan-note">при оплате за месяц</div>
+        <div class="plan-price">₽199 <small>/ 1 месяц</small></div>
+        <div class="plan-note">разовый платёж · продление автоматическое</div>
         <ul class="plan-features">
           <li>До 3 устройств</li>
           <li>Большинство локаций</li>
@@ -1132,12 +1099,12 @@
 
       <div class="pricing-card pricing-card--featured reveal" role="button" tabindex="0"
            style="--reveal-delay: 100ms;"
-           data-plan-name="3 месяца" data-plan-price="350" data-plan-limit="5"
-           aria-label="Тариф 3 месяца, 350 рублей в месяц, до 5 устройств">
+           data-plan-name="3 месяца" data-plan-price="450" data-plan-limit="5"
+           aria-label="Тариф 3 месяца, 450 рублей, до 5 устройств">
         <span class="plan-tag">Хит</span>
         <div class="plan-name"><span class="plan-radio" aria-hidden="true"></span> Связист</div>
-        <div class="plan-price">₽350 <small>/ мес</small></div>
-        <div class="plan-note">₽1 050 за 3 месяца · −26%</div>
+        <div class="plan-price">₽450 <small>/ 3 месяца</small></div>
+        <div class="plan-note">≈ ₽150 в месяц · экономия 25%</div>
         <ul class="plan-features">
           <li>До 5 устройств</li>
           <li>Большинство локаций</li>
@@ -1149,10 +1116,10 @@
       <div class="pricing-card reveal" role="button" tabindex="0"
            style="--reveal-delay: 180ms;"
            data-plan-name="6 месяцев" data-plan-price="800" data-plan-limit="10"
-           aria-label="Тариф 6 месяцев, 800 рублей за период, до 10 устройств">
+           aria-label="Тариф 6 месяцев, 800 рублей, до 10 устройств">
         <div class="plan-name"><span class="plan-radio" aria-hidden="true"></span> Страж</div>
-        <div class="plan-price">₽800 <small>/ период</small></div>
-        <div class="plan-note">₽4 800 за 6 месяцев · −33%</div>
+        <div class="plan-price">₽800 <small>/ 6 месяцев</small></div>
+        <div class="plan-note">≈ ₽133 в месяц · экономия 33%</div>
         <ul class="plan-features">
           <li>До 10 устройств</li>
           <li>Все локации и полная скорость</li>
@@ -1163,9 +1130,13 @@
 
     </div>
 
-    <div class="pricing-mascot reveal">
-      <img src="ferret.png" alt="Хорёк-Связист — талисман QuarkVPN">
-      <p><strong>Хорёк-Связист:</strong> «Выбирай любой план, подключайся и лети на максимальной скорости! Сомневаешься — бери средний, он у наших ребят самый ходовой.»</p>
+    <div class="mascot reveal">
+      <img class="mascot__img" src="ferret.png" alt="Хорёк-Связист — талисман QuarkVPN">
+      <div class="mascot__body">
+        <p class="mascot__name">Хорёк-Связист</p>
+        <p class="mascot__quote">«Выбирай любой план, подключайся и лети на максимальной скорости! Сомневаешься — бери средний, он у наших ребят самый ходовой.»</p>
+        <span class="mascot__tag"><span class="status-dot" aria-hidden="true"></span> Самый ходовой — тариф «Связист»</span>
+      </div>
     </div>
   </section>
 
@@ -1178,14 +1149,12 @@
       </div>
     </div>
 
-    <div class="support-card reveal">
-      <img src="badger.png" alt="Барсук-Страж — талисман поддержки QuarkVPN">
-      <div class="support-card__body">
-        <p>«В случае каких-то вопросов или проблем смело обращайтесь к нам в официальную поддержку. Разбираемся в любое время суток — даже в 4 утра по Москве.»</p>
-        <span class="support-hours">
-          <span class="status-dot" aria-hidden="true"></span>
-          На связи 24/7 
-        </span>
+    <div class="mascot reveal">
+      <img class="mascot__img" src="badger.png" alt="Барсук-Страж — талисман поддержки QuarkVPN">
+      <div class="mascot__body">
+        <p class="mascot__name">Барсук-Страж</p>
+        <p class="mascot__quote">«В случае каких-то вопросов или проблем смело обращайтесь к нам в официальную поддержку. Разбираемся в любое время суток — даже в 4 утра по Москве.»</p>
+        <span class="mascot__tag"><span class="status-dot" aria-hidden="true"></span> На связи 24/7 · ответ за 4 минуты</span>
       </div>
     </div>
 
