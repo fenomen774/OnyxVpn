@@ -329,11 +329,11 @@
       margin-bottom: 10px;
     }
 
-    /* Поддержка с Барсуком внизу в центре (в такой же рамке) */
+    /* Поддержка с Барсуком снизу в центре (в фирменной карточке маскота) */
     .support-section {
       text-align: center;
       padding: 60px 8% 100px;
-      max-width: 500px;
+      max-width: 600px;
       margin: 0 auto;
     }
 
@@ -589,11 +589,12 @@
     </div>
   </section>
 
-  <!-- Поддержка с Барсуком снизу в центре (в фирменной карточке) -->
+  <!-- Поддержка с Барсуком снизу в центре в такой же карточке маскота -->
   <section class="support-section" id="support">
-    <div class="mascot-card">
+    <h2 class="section-title" style="margin-bottom: 30px;">Остались вопросы?</h2>
+    <div class="mascot-card" style="margin: 0 auto;">
       <img src="badger.png" alt="Барсук-Страж">
-      <div class="speech-bubble" style="margin-bottom: 20px;">«В случае вопросов смело обращайтесь в поддержку!»</div>
+      <div class="speech-bubble" style="margin-bottom: 20px;">«В случае каких-то вопросов или проблем смело обращайтесь к нам в поддержку!»</div>
       <a href="https://t.me/your_telegram_bot" target="_blank" class="telegram-btn">
         💬 Написать в Telegram-бот
       </a>
@@ -720,30 +721,4 @@
         authContainer.innerHTML = `<a href="dashboard.html" class="btn btn-outline">Личный кабинет</a>`;
       } else {
         authContainer.innerHTML = `
-          <div class="auth-buttons-group">
-            <button class="btn btn-outline" onclick="openModal('login')">Войти</button>
-            <button class="btn btn-primary" onclick="openModal('register')">Регистрация</button>
-          </div>
-        `;
-      }
-    }
-
-    function goToPay(planName, price, limit) {
-      if (!currentEmail) {
-        showToast('Сначала войдите или зарегистрируйтесь!');
-        openModal('login');
-        return;
-      }
-      localStorage.setItem('quark_selected_plan', JSON.stringify({ name: planName, price: price, limit: limit }));
-      window.location.href = 'pay.html';
-    }
-
-    function showToast(text) {
-      const toast = document.getElementById('toast');
-      toast.textContent = text;
-      toast.classList.add('show');
-      setTimeout(() => { toast.classList.remove('show'); }, 3000);
-    }
-  </script>
-</body>
-</html>
+          <div class="auth-buttons-
