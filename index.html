@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QuarkVPN — Абсолютная приватность и скорость</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet">
   <script>document.documentElement.className += ' js';</script>
   <style>
     :root {
@@ -251,9 +248,8 @@
     .hero {
       position: relative;
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      align-items: center;
-      gap: 56px;
+      grid-template-columns: 1fr;
+      gap: 48px;
       padding: 88px 6% 72px;
       max-width: 1280px;
       margin: 0 auto;
@@ -320,29 +316,6 @@
       flex-wrap: wrap;
     }
 
-    /* Панель-консоль с Лисом */
-    .hero-panel {
-      background: linear-gradient(180deg, var(--panel-2) 0%, var(--panel) 100%);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 60px rgba(200, 255, 77, 0.06);
-    }
-
-    .hero-panel__bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 18px;
-      border-bottom: 1px solid var(--line);
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      background: rgba(200, 255, 77, 0.04);
-    }
-
     /* ===== Маскоты: единый блок для Лиса, Хорька и Барсука ===== */
     .mascot {
       display: flex;
@@ -352,16 +325,6 @@
       border: 1px solid var(--line);
       border-radius: var(--radius-lg);
       padding: 24px;
-    }
-
-    /* Вариант внутри панели героя: без собственной «карточки», по центру */
-    .mascot--bare {
-      background: none;
-      border: none;
-      border-radius: 0;
-      padding: 22px;
-      flex-direction: column;
-      text-align: center;
     }
 
     .mascot__img {
@@ -379,9 +342,8 @@
       align-items: flex-start;
       gap: 10px;
       min-width: 0;
+      flex: 1;
     }
-
-    .mascot--bare .mascot__body { align-items: center; }
 
     .mascot__name {
       font-family: var(--font-mono);
@@ -973,8 +935,8 @@
       }
     }
   </style>
-</head>
-<body>
+
+
 
   <!-- Навигация -->
   <header class="site-header" id="site-header">
@@ -995,13 +957,12 @@
     </div>
 
     <!-- На главной странице только «Личный кабинет»; кнопка «Выйти» живёт в dashboard.html -->
-    <div class="auth-buttons-group" id="auth-user-group" hidden>
+    <div class="auth-buttons-group" id="auth-user-group" hidden="">
       <span class="user-email" id="user-email"></span>
       <a href="dashboard.html" class="btn btn-primary">Личный кабинет</a>
     </div>
 
-    <button type="button" class="burger" id="burger"
-            aria-label="Открыть меню" aria-expanded="false" aria-controls="site-nav">
+    <button type="button" class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="site-nav">
       <span aria-hidden="true"></span>
     </button>
   </header>
@@ -1009,10 +970,7 @@
   <!-- Главный экран -->
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero-content">
-      <div class="eyebrow">
-        <span class="status-dot" aria-hidden="true"></span>
-        Узлы онлайн · 47 локаций
-      </div>
+      
       <h1 id="hero-title">Твоя цифровая тень — <em>без следов</em>.</h1>
       <p class="hero-lead">Квантово-устойчивое шифрование, нулевые логи и пропускная способность до 10 Гбит/с. QuarkVPN маскирует трафик под обычный HTTPS — провайдер не видит даже факт подключения.</p>
       <div class="hero-cta">
@@ -1021,18 +979,12 @@
       </div>
     </div>
 
-    <div class="hero-panel reveal">
-      <div class="hero-panel__bar">
-        <span>quark://node-04</span>
-        <span>защищено</span>
-      </div>
-      <div class="mascot mascot--bare">
-        <img class="mascot__img" src="fox.png" alt="Лис-Проводник — талисман QuarkVPN">
-        <div class="mascot__body">
-          <p class="mascot__name">Лис-Проводник</p>
-          <p class="mascot__quote">«Я знаю каждую тропу между тобой и интернетом — иду впереди, чтобы следов не осталось. Шагай следом.»</p>
-          <span class="mascot__tag"><span class="status-dot" aria-hidden="true"></span> 47 локаций · маршрут проложен</span>
-        </div>
+    <div class="mascot reveal">
+      <img class="mascot__img" src="fox.png" alt="Лис-Проводник — талисман QuarkVPN">
+      <div class="mascot__body">
+        <p class="mascot__name">Лис-Проводник</p>
+        <p class="mascot__quote">«Я знаю каждую тропу между тобой и интернетом — иду впереди, чтобы следов не осталось. Шагай следом.»</p>
+        <span class="mascot__tag"><span class="status-dot" aria-hidden="true"></span> Большое количество локаций</span>
       </div>
     </div>
   </section>
@@ -1083,9 +1035,7 @@
 
     <div class="pricing-grid" id="pricing-grid">
 
-      <div class="pricing-card reveal" role="button" tabindex="0"
-           data-plan-name="1 месяц" data-plan-price="199" data-plan-limit="3"
-           aria-label="Тариф 1 месяц, 199 рублей, до 3 устройств">
+      <div class="pricing-card reveal" role="button" tabindex="0" data-plan-name="1 месяц" data-plan-price="199" data-plan-limit="3" aria-label="Тариф 1 месяц, 199 рублей, до 3 устройств">
         <div class="plan-name"><span class="plan-radio" aria-hidden="true"></span> Старт</div>
         <div class="plan-price">₽199 <small>/ 1 месяц</small></div>
         <div class="plan-note">разовый платёж · продление автоматическое</div>
@@ -1097,10 +1047,7 @@
         <span class="btn btn-outline" aria-hidden="true">Выбрать</span>
       </div>
 
-      <div class="pricing-card pricing-card--featured reveal" role="button" tabindex="0"
-           style="--reveal-delay: 100ms;"
-           data-plan-name="3 месяца" data-plan-price="450" data-plan-limit="5"
-           aria-label="Тариф 3 месяца, 450 рублей, до 5 устройств">
+      <div class="pricing-card pricing-card--featured reveal" role="button" tabindex="0" style="--reveal-delay: 100ms;" data-plan-name="3 месяца" data-plan-price="450" data-plan-limit="5" aria-label="Тариф 3 месяца, 450 рублей, до 5 устройств">
         <span class="plan-tag">Хит</span>
         <div class="plan-name"><span class="plan-radio" aria-hidden="true"></span> Связист</div>
         <div class="plan-price">₽450 <small>/ 3 месяца</small></div>
@@ -1113,10 +1060,7 @@
         <span class="btn btn-primary" aria-hidden="true">Выбрать</span>
       </div>
 
-      <div class="pricing-card reveal" role="button" tabindex="0"
-           style="--reveal-delay: 180ms;"
-           data-plan-name="6 месяцев" data-plan-price="800" data-plan-limit="10"
-           aria-label="Тариф 6 месяцев, 800 рублей, до 10 устройств">
+      <div class="pricing-card reveal" role="button" tabindex="0" style="--reveal-delay: 180ms;" data-plan-name="6 месяцев" data-plan-price="800" data-plan-limit="10" aria-label="Тариф 6 месяцев, 800 рублей, до 10 устройств">
         <div class="plan-name"><span class="plan-radio" aria-hidden="true"></span> Страж</div>
         <div class="plan-price">₽800 <small>/ 6 месяцев</small></div>
         <div class="plan-note">≈ ₽133 в месяц · экономия 33%</div>
@@ -1170,18 +1114,16 @@
       <h2 id="modal-heading">Вход в аккаунт</h2>
       <p class="modal-subtitle" id="modal-subtext">Введите ваши данные для входа</p>
 
-      <form id="auth-form" novalidate>
+      <form id="auth-form" novalidate="">
         <div class="form-group">
           <label for="auth-email">Email</label>
-          <input type="email" id="auth-email" name="email" class="form-control"
-                 placeholder="name@example.com" autocomplete="email" required>
+          <input type="email" id="auth-email" name="email" class="form-control" placeholder="name@example.com" autocomplete="email" required="">
         </div>
 
         <div class="form-group">
           <label for="auth-password">Пароль</label>
-          <input type="password" id="auth-password" name="password" class="form-control"
-                 placeholder="••••••••" autocomplete="current-password" required>
-          <span class="form-hint" id="password-hint" hidden>Минимум 8 символов</span>
+          <input type="password" id="auth-password" name="password" class="form-control" placeholder="••••••••" autocomplete="current-password" required="">
+          <span class="form-hint" id="password-hint" hidden="">Минимум 8 символов</span>
         </div>
 
         <p class="form-error" id="auth-error" role="alert"></p>
@@ -1600,5 +1542,3 @@
       initReveal();
     })();
   </script>
-</body>
-</html>
