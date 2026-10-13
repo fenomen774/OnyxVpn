@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ЕбеньVPN — Абсолютная приватность и скорость</title>
+  <title>QuarkVPN — Абсолютная приватность и скорость</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -178,12 +178,6 @@
       text-align: center;
       font-size: 2.2rem;
       margin-bottom: 50px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
     }
 
     .features-grid {
@@ -409,8 +403,8 @@
   <!-- Навигация -->
   <header>
     <a href="index.html" class="logo">
-      <div class="logo-icon">Е</div>
-      <span>ЕбеньVPN</span>
+      <div class="logo-icon">Q</div>
+      <span>QuarkVPN</span>
     </a>
     <nav>
       <a href="index.html#features">Возможности</a>
@@ -428,12 +422,12 @@
   <section class="hero">
     <div class="badge">Next-Gen Privacy Protocol</div>
     <h1>Твоя цифровая тень.<br>Быстро. Анонимно. Надежно.</h1>
-    <p>ЕбеньVPN шифрует трафик с использованием современных протоколов нового поколения (VLESS / WireGuard). Полное отсутствие логов и максимальная пропускная способность.</p>
+    <p>QuarkVPN шифрует трафик с использованием современных протоколов нового поколения (VLESS / WireGuard). Полное отсутствие логов и максимальная пропускная способность.</p>
   </section>
 
   <!-- Преимущества -->
   <section class="features" id="features">
-    <h2 class="section-title">Почему именно ЕбеньVPN</h2>
+    <h2 class="section-title">Почему именно QuarkVPN</h2>
     <div class="features-grid">
       <div class="card">
         <div class="card-icon">⚡</div>
@@ -521,12 +515,12 @@
   <div id="toast">Успешно!</div>
 
   <footer>
-    <p>© 2026 ЕбеньVPN. Все права защищены. Безопасность превыше всего.</p>
+    <p>© 2026 QuarkVPN. Все права защищены. Безопасность превыше всего.</p>
   </footer>
 
   <script>
-    let usersDB = JSON.parse(localStorage.getItem('ebenh_users_db')) || {};
-    let currentEmail = localStorage.getItem('ebenh_current_user') || null;
+    let usersDB = JSON.parse(localStorage.getItem('quark_users_db')) || {};
+    let currentEmail = localStorage.getItem('quark_current_user') || null;
     let currentMode = 'login';
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -597,12 +591,12 @@
           subscription: null, 
           devices: [] 
         };
-        localStorage.setItem('ebenh_users_db', JSON.stringify(usersDB));
+        localStorage.setItem('quark_users_db', JSON.stringify(usersDB));
         showToast('Аккаунт успешно создан!');
       }
 
       currentEmail = email;
-      localStorage.setItem('ebenh_current_user', currentEmail);
+      localStorage.setItem('quark_current_user', currentEmail);
       closeModal();
       updateUIState();
     }
@@ -627,7 +621,7 @@
         openModal('login');
         return;
       }
-      localStorage.setItem('ebenh_selected_plan', JSON.stringify({ name: planName, price: price, limit: limit }));
+      localStorage.setItem('quark_selected_plan', JSON.stringify({ name: planName, price: price, limit: limit }));
       window.location.href = 'pay.html';
     }
 
