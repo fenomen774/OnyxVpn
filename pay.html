@@ -436,7 +436,7 @@
     /* Табы способов оплаты */
     .vb-t8k-tabs {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
       margin-bottom: 24px;
     }
@@ -608,25 +608,6 @@
     .vb-t8k-alt--active { display: block; }
     .vb-t8k-cardform--hidden { display: none; }
 
-    .vb-t8k-cryptoaddr {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 16px;
-    }
-
-    .vb-t8k-cryptoaddr code {
-      flex: 1;
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: #b9c2d2;
-      word-break: break-all;
-    }
-
     .vb-t8k-qrcode {
       width: 168px;
       height: 168px;
@@ -764,10 +745,6 @@
       font-size: 0.78rem;
     }
 
-    .vb-t8k-summary__meta li.vb-t8k-summary__meta-row--discount span:last-child {
-      color: var(--accent);
-    }
-
     .vb-t8k-summary__total {
       display: flex;
       justify-content: space-between;
@@ -792,32 +769,6 @@
       font-weight: 700;
       letter-spacing: -0.03em;
     }
-
-    /* Промокод */
-    .vb-t8k-promo {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 18px;
-    }
-
-    .vb-t8k-promo .vb-t8k-input {
-      flex: 1;
-      min-width: 0;
-      font-family: var(--font-mono);
-      text-transform: uppercase;
-      font-size: 0.85rem;
-    }
-
-    .vb-t8k-promo__msg {
-      display: none;
-      font-family: var(--font-mono);
-      font-size: 0.76rem;
-      margin: -10px 0 16px;
-      color: var(--accent);
-    }
-
-    .vb-t8k-promo__msg--error { color: var(--danger); }
-    .vb-t8k-promo__msg--visible { display: block; }
 
     .vb-t8k-trust {
       list-style: none;
@@ -1374,12 +1325,6 @@
             СБП
             <span class="vb-t8k-tab__hint">по QR-коду</span>
           </button>
-          <button type="button" class="vb-t8k-tab" role="tab" id="vb-t8k-tab-crypto"
-                  aria-selected="false" aria-controls="vb-t8k-panel-crypto" data-method="crypto" tabindex="-1">
-            <span class="vb-t8k-tab__icon" aria-hidden="true">🪙</span>
-            Криптовалюта
-            <span class="vb-t8k-tab__hint">USDT · TRC-20</span>
-          </button>
         </div>
 
         <!-- Карта -->
@@ -1447,27 +1392,6 @@
           </button>
         </div>
 
-        <!-- Криптовалюта -->
-        <div class="vb-t8k-alt" id="vb-t8k-panel-crypto" role="tabpanel" aria-labelledby="vb-t8k-tab-crypto" hidden>
-          <ol class="vb-t8k-steps">
-            <li>Переведите точную сумму <strong id="vb-t8k-crypto-amount" style="color: var(--text); font-weight: 600;">—</strong> на адрес ниже.</li>
-            <li>Сеть — USDT TRC-20. Переводы в других сетях не зачисляются.</li>
-            <li>Подтверждение в сети TRON занимает 1–2 минуты.</li>
-          </ol>
-
-          <div class="vb-t8k-cryptoaddr">
-            <code id="vb-t8k-crypto-addr">TJmQk7VnP2rXt5wY3Lm8Qa1Zc4Bf6Hd9Jg0</code>
-            <button type="button" class="vb-t8k-btn vb-t8k-btn--outline vb-t8k-btn--sm" data-action="copy-crypto">Копировать</button>
-          </div>
-
-          <p style="color: var(--muted); font-size: 0.82rem; font-family: var(--font-mono); margin: 0 0 18px;">
-            Курс зафиксирован на 15 минут · обновите страницу при просрочке
-          </p>
-
-          <button type="button" class="vb-t8k-btn vb-t8k-btn--primary vb-t8k-btn--lg vb-t8k-btn--block" data-action="pay-crypto">
-            Платёж отправлен
-          </button>
-        </div>
       </section>
 
       <!-- Сводка заказа -->
@@ -1484,17 +1408,7 @@
             <li><span>Устройств</span><span id="vb-t8k-sum-limit">—</span></li>
             <li><span>Период</span><span id="vb-t8k-sum-period">—</span></li>
             <li><span>Цена</span><span id="vb-t8k-sum-price">—</span></li>
-            <li class="vb-t8k-summary__meta-row--discount" id="vb-t8k-sum-discount-row" hidden>
-              <span>Промокод</span><span id="vb-t8k-sum-discount">—</span>
-            </li>
           </ul>
-
-          <div class="vb-t8k-promo">
-            <label for="vb-t8k-promo-input" class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Промокод</label>
-            <input type="text" id="vb-t8k-promo-input" class="vb-t8k-input" placeholder="ПРОМОКОД" maxlength="16" autocomplete="off">
-            <button type="button" class="vb-t8k-btn vb-t8k-btn--outline vb-t8k-btn--sm" data-action="apply-promo">Применить</button>
-          </div>
-          <p class="vb-t8k-promo__msg" id="vb-t8k-promo-msg" role="status"></p>
 
           <div class="vb-t8k-summary__total">
             <span>К оплате</span>
@@ -1603,23 +1517,16 @@
     var PLAN_KEY = 'quark_selected_plan';
     var DAY_MS = 86400000;
 
-    /* Демонстрационный адрес кошелька. В продакшене замените на серверный.
-       Секреты и настоящие платёжные реквизиты в браузер не попадают. */
-    var CRYPTO_ADDRESS = 'TJmQk7VnP2rXt5wY3Lm8Qa1Zc4Bf6Hd9Jg0';
-    var USDT_RATE = 92.4; /* RUB за 1 USDT, демо-курс */
-
-    /* Рабочие промокоды */
-    var PROMO_CODES = {
-      'QUARK10': { type: 'percent', value: 10 },
-      'LAB20': { type: 'percent', value: 20 }
-    };
+    /* Итоговые цены за весь период (₽) — как в карточках на главной.
+       Ключ — число месяцев из названия тарифа. Если для тарифа нет
+       фиксированной цены, берётся цена за месяц × число месяцев. */
+    var PLAN_TOTALS = { 1: 199, 3: 450, 6: 800 };
 
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     var usersDB = loadJson(DB_KEY, {});
     var currentEmail = localStorage.getItem(SESSION_KEY) || null;
     var plan = loadJson(PLAN_KEY, null);
-    var promo = null;
     var currentMethod = 'card';
     var toastTimer = null;
     var processing = false;
@@ -1643,7 +1550,6 @@
       tabs: Array.prototype.slice.call(document.querySelectorAll('.vb-t8k-tab')),
       panelCard: document.getElementById('vb-t8k-panel-card'),
       panelSbp: document.getElementById('vb-t8k-panel-sbp'),
-      panelCrypto: document.getElementById('vb-t8k-panel-crypto'),
 
       cardForm: document.getElementById('vb-t8k-cardform'),
       cardNumber: document.getElementById('vb-t8k-card-number'),
@@ -1660,20 +1566,13 @@
       pvExp: document.getElementById('vb-t8k-pv-exp'),
 
       sbpAmount: document.getElementById('vb-t8k-sbp-amount'),
-      cryptoAmount: document.getElementById('vb-t8k-crypto-amount'),
-      cryptoAddr: document.getElementById('vb-t8k-crypto-addr'),
 
       sumName: document.getElementById('vb-t8k-sum-name'),
       sumTag: document.getElementById('vb-t8k-sum-tag'),
       sumLimit: document.getElementById('vb-t8k-sum-limit'),
       sumPeriod: document.getElementById('vb-t8k-sum-period'),
       sumPrice: document.getElementById('vb-t8k-sum-price'),
-      sumDiscountRow: document.getElementById('vb-t8k-sum-discount-row'),
-      sumDiscount: document.getElementById('vb-t8k-sum-discount'),
       sumTotal: document.getElementById('vb-t8k-sum-total'),
-
-      promoInput: document.getElementById('vb-t8k-promo-input'),
-      promoMsg: document.getElementById('vb-t8k-promo-msg'),
 
       overlay: document.getElementById('vb-t8k-overlay'),
       overlayLog: document.getElementById('vb-t8k-overlay-log'),
@@ -1756,46 +1655,16 @@
       });
     }
 
-    function copyText(text) {
-      function fallback() {
-        var area = document.createElement('textarea');
-        area.value = text;
-        area.setAttribute('readonly', '');
-        area.style.position = 'fixed';
-        area.style.opacity = '0';
-        document.body.appendChild(area);
-        area.select();
-        try {
-          document.execCommand('copy');
-          showToast('Скопировано в буфер обмена.');
-        } catch (e) {
-          showToast('Не удалось скопировать — выделите текст вручную.');
-        }
-        document.body.removeChild(area);
-      }
-
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(function () {
-          showToast('Скопировано в буфер обмена.');
-        }).catch(fallback);
-      } else {
-        fallback();
-      }
-    }
-
     /* ===== Расчёты ===== */
 
     function months() { return monthsFromName(plan.name); }
 
-    function baseTotal() { return plan.price * months(); }
-
-    function discountValue() {
-      if (!promo) return 0;
-      if (promo.type === 'percent') return baseTotal() * promo.value / 100;
-      return Math.min(promo.value, baseTotal());
+    function baseTotal() {
+      var fixed = PLAN_TOTALS[months()];
+      return fixed || plan.price * months();
     }
 
-    function grandTotal() { return Math.max(0, baseTotal() - discountValue()); }
+    function grandTotal() { return baseTotal(); }
 
     /* ===== Отрисовка сводки ===== */
 
@@ -1805,23 +1674,12 @@
       els.sumTag.textContent = plan.limit >= 10 ? 'максимум' : (plan.limit >= 5 ? 'хит' : 'базовый');
       els.sumLimit.textContent = 'до ' + plan.limit;
       els.sumPeriod.textContent = pluralMonths(months());
-      els.sumPrice.textContent = fmtMoney(plan.price) + ' / мес';
-
-      if (promo) {
-        els.sumDiscountRow.hidden = false;
-        els.sumDiscount.textContent = '−' + fmtMoney(discountValue());
-      } else {
-        els.sumDiscountRow.hidden = true;
-        els.sumDiscount.textContent = '—';
-      }
+      els.sumPrice.textContent = fmtMoney(Math.round(baseTotal() / months())) + ' / мес';
 
       var total = fmtMoney(grandTotal());
       els.sumTotal.textContent = total;
       els.payAmount.textContent = total;
       els.sbpAmount.textContent = total;
-
-      var usdt = (grandTotal() / USDT_RATE).toFixed(2);
-      els.cryptoAmount.textContent = usdt + ' USDT (≈ ' + total + ')';
     }
 
     /* ===== Превью карты ===== */
@@ -1891,8 +1749,6 @@
       els.panelCard.hidden = method !== 'card';
       els.panelSbp.classList.toggle('vb-t8k-alt--active', method === 'sbp');
       els.panelSbp.hidden = method !== 'sbp';
-      els.panelCrypto.classList.toggle('vb-t8k-alt--active', method === 'crypto');
-      els.panelCrypto.hidden = method !== 'crypto';
     }
 
     /* ===== QR-демо ===== */
@@ -1927,12 +1783,6 @@
         'Ожидание подтверждения банка…',
         'Сверка суммы перевода…',
         'Транзакция СБП найдена',
-        'Платёж подтверждён'
-      ],
-      crypto: [
-        'Проверка сети TRON…',
-        'Ожидание подтверждений: 12/12…',
-        'Курс зафиксирован',
         'Платёж подтверждён'
       ]
     };
@@ -1989,7 +1839,8 @@
 
       user.subscription = {
         name: plan.name,
-        price: plan.price,
+        price: Math.round(baseTotal() / months()),
+        total: baseTotal(),
         limit: plan.limit,
         started: now,
         expires: base + days * DAY_MS
@@ -2107,51 +1958,6 @@
           if (!processing) runProcessing('sbp', function () { finishPayment('СБП'); });
           return;
         }
-        if (action === 'pay-crypto') {
-          if (!processing) runProcessing('crypto', function () { finishPayment('Криптовалюта'); });
-          return;
-        }
-        if (action === 'copy-crypto') {
-          copyText(CRYPTO_ADDRESS);
-          return;
-        }
-        if (action === 'apply-promo') {
-          applyPromo();
-          return;
-        }
-      }
-    });
-
-    function applyPromo() {
-      var code = els.promoInput.value.trim().toUpperCase();
-      els.promoMsg.classList.add('vb-t8k-promo__msg--visible');
-
-      if (!code) {
-        promo = null;
-        els.promoMsg.classList.remove('vb-t8k-promo__msg--visible');
-        renderSummary();
-        return;
-      }
-
-      var found = PROMO_CODES[code];
-      if (found) {
-        promo = found;
-        els.promoMsg.classList.remove('vb-t8k-promo__msg--error');
-        els.promoMsg.textContent = 'Промокод применён: −' + (found.type === 'percent' ? found.value + '%' : fmtMoney(found.value)) + '.';
-        renderSummary();
-        showToast('Скидка по промокоду активирована.');
-      } else {
-        promo = null;
-        els.promoMsg.classList.add('vb-t8k-promo__msg--error');
-        els.promoMsg.textContent = 'Такого промокода нет. Проверьте раскладку и попробуйте ещё раз.';
-        renderSummary();
-      }
-    }
-
-    els.promoInput.addEventListener('keydown', function (event) {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        applyPromo();
       }
     });
 
