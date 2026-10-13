@@ -134,7 +134,7 @@
       gap: 10px;
     }
 
-    /* Главный экран с Лисом слева */
+    /* Главный экран с Лисом */
     .hero {
       display: flex;
       align-items: center;
@@ -155,32 +155,33 @@
       justify-content: center;
     }
 
+    /* Единый увеличенный размер карточки маскота */
     .mascot-card {
       width: 100%;
-      max-width: 380px;
+      max-width: 420px;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 24px;
-      padding: 20px;
+      padding: 24px;
       text-align: center;
       box-shadow: 0 20px 40px rgba(0,0,0,0.5);
     }
 
     .mascot-card img {
       width: 100%;
-      height: auto;
+      height: 280px;
+      object-fit: cover;
       border-radius: 16px;
-      margin-bottom: 15px;
+      margin-bottom: 18px;
     }
 
     .speech-bubble {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--card-border);
       border-radius: 16px;
-      padding: 14px 18px;
-      font-size: 0.95krem;
+      padding: 16px 20px;
+      font-size: 1rem;
       color: var(--text-muted);
-      position: relative;
     }
 
     .badge {
@@ -228,7 +229,7 @@
       gap: 24px;
     }
 
-    /* Секция с Хорьком посередине (возле тарифов) */
+    /* Секция тарифов с Хорьком */
     .pricing-with-mascot {
       display: flex;
       align-items: center;
@@ -328,22 +329,12 @@
       margin-bottom: 10px;
     }
 
-    /* Секция с Барсуком снизу и поддержкой */
+    /* Поддержка с Барсуком внизу в центре (в такой же рамке) */
     .support-section {
       text-align: center;
-      padding: 80px 8% 100px;
-      max-width: 700px;
+      padding: 60px 8% 100px;
+      max-width: 500px;
       margin: 0 auto;
-    }
-
-    .support-mascot {
-      width: 220px;
-      height: auto;
-      border-radius: 50%;
-      margin: 0 auto 20px;
-      display: block;
-      border: 2px solid var(--card-border);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
     .telegram-btn {
@@ -598,16 +589,15 @@
     </div>
   </section>
 
-  <!-- Поддержка с Барсуком снизу в центре -->
+  <!-- Поддержка с Барсуком снизу в центре (в фирменной карточке) -->
   <section class="support-section" id="support">
-    <img src="badger.png" alt="Барсук-Страж" class="support-mascot">
-    <h2 class="section-title" style="margin-bottom: 16px;">Остались вопросы?</h2>
-    <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 500px; margin: 0 auto;">
-      В случае каких-то вопросов или проблем смело обращайтесь к нам в официальную поддержку. Мы на связи 24/7!
-    </p>
-    <a href="https://t.me/your_telegram_bot" target="_blank" class="telegram-btn">
-      💬 Написать в Telegram-бот
-    </a>
+    <div class="mascot-card">
+      <img src="badger.png" alt="Барсук-Страж">
+      <div class="speech-bubble" style="margin-bottom: 20px;">«В случае вопросов смело обращайтесь в поддержку!»</div>
+      <a href="https://t.me/your_telegram_bot" target="_blank" class="telegram-btn">
+        💬 Написать в Telegram-бот
+      </a>
+    </div>
   </section>
 
   <!-- Модальное окно авторизации/регистрации -->
