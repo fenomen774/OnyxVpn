@@ -134,7 +134,7 @@
       gap: 10px;
     }
 
-    /* Главный экран с персонажами */
+    /* Главный экран с Лисом слева */
     .hero {
       display: flex;
       align-items: center;
@@ -147,33 +147,40 @@
 
     .hero-content {
       flex: 1.2;
-      text-align: left;
     }
 
     .hero-visual {
       flex: 1;
       display: flex;
       justify-content: center;
-      align-items: center;
     }
 
-    .characters-banner {
+    .mascot-card {
       width: 100%;
-      border-radius: 20px;
-      overflow: hidden;
+      max-width: 380px;
+      background: var(--card-bg);
       border: 1px solid var(--card-border);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-      transition: transform 0.3s ease;
+      border-radius: 24px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
     }
 
-    .characters-banner:hover {
-      transform: scale(1.02);
-    }
-
-    .characters-banner img {
+    .mascot-card img {
       width: 100%;
       height: auto;
-      display: block;
+      border-radius: 16px;
+      margin-bottom: 15px;
+    }
+
+    .speech-bubble {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-size: 0.95krem;
+      color: var(--text-muted);
+      position: relative;
     }
 
     .badge {
@@ -203,7 +210,7 @@
       margin-bottom: 36px;
     }
 
-    .features, .characters-section {
+    .features {
       padding: 80px 8%;
       max-width: 1200px;
       margin: 0 auto;
@@ -215,16 +222,33 @@
       margin-bottom: 50px;
     }
 
-    .features-grid, .characters-grid {
+    .features-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 24px;
+    }
+
+    /* Секция с Хорьком посередине (возле тарифов) */
+    .pricing-with-mascot {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 80px 8%;
     }
 
     .pricing-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
+      flex: 2.5;
+    }
+
+    .pricing-mascot-side {
+      flex: 1;
+      display: flex;
+      justify-content: center;
     }
 
     .card {
@@ -253,12 +277,6 @@
     .card p {
       color: var(--text-muted);
       font-size: 0.95rem;
-    }
-
-    .pricing {
-      padding: 80px 8%;
-      max-width: 1200px;
-      margin: 0 auto;
     }
 
     .pricing-card {
@@ -308,6 +326,45 @@
 
     .pricing-features li {
       margin-bottom: 10px;
+    }
+
+    /* Секция с Барсуком снизу и поддержкой */
+    .support-section {
+      text-align: center;
+      padding: 80px 8% 100px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .support-mascot {
+      width: 220px;
+      height: auto;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: block;
+      border: 2px solid var(--card-border);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .telegram-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #229ed9;
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin-top: 24px;
+      box-shadow: 0 0 20px rgba(34, 158, 217, 0.4);
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .telegram-btn:hover {
+      transform: translateY(-2px);
+      background: #1f8bc2;
     }
 
     /* Модальное окно */
@@ -426,7 +483,7 @@
 
     @media (max-width: 900px) {
       .hero { flex-direction: column; text-align: center; }
-      .hero-content { text-align: center; }
+      .pricing-with-mascot { flex-direction: column-reverse; }
       .pricing-grid { grid-template-columns: 1fr; }
       nav { display: none; }
     }
@@ -444,8 +501,8 @@
     </a>
     <nav>
       <a href="index.html#features">Возможности</a>
-      <a href="index.html#characters">Маскоты</a>
       <a href="index.html#pricing">Тарифы</a>
+      <a href="index.html#support">Поддержка</a>
     </nav>
     <div id="auth-nav-container">
       <div class="auth-buttons-group">
@@ -455,37 +512,19 @@
     </div>
   </header>
 
-  <!-- Главный экран с персонажами -->
+  <!-- Главный экран с Лисом слева -->
   <section class="hero">
+    <div class="hero-visual">
+      <div class="mascot-card">
+        <img src="fox.png" alt="Квантовый Лис">
+        <div class="speech-bubble">«Привет! Я расскажу, как сделать твой интернет быстрым и безопасным!»</div>
+      </div>
+    </div>
     <div class="hero-content">
       <div class="badge">Next-Gen Privacy Protocol</div>
       <h1>Твоя цифровая тень.<br>Быстро. Анонимно. Надежно.</h1>
-      <p>QuarkVPN шифрует трафик с использованием современных протоколов нового поколения (VLESS / WireGuard). Полное отсутствие логов и максимальная пропускная способность.</p>
+      <p>QuarkVPN шифрует трафик с использованием современных протоколов нового поколения. Полное отсутствие логов и максимальная пропускная способность.</p>
       <button class="btn btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior: 'smooth'})">Выбрать тариф</button>
-    </div>
-    <div class="hero-visual">
-      <div class="characters-banner">
-        <img src="characters.png" alt="Персонажи QuarkVPN">
-      </div>
-    </div>
-  </section>
-
-  <!-- Секция маскотов -->
-  <section class="characters-section" id="characters">
-    <h2 class="section-title">Хранители вашей безопасности</h2>
-    <div class="characters-grid">
-      <div class="card" style="text-align: center;">
-        <h3>🦊 Квантовый Лис</h3>
-        <p>Отвечает за молниеносную скорость соединения и обход любых сетевых преград.</p>
-      </div>
-      <div class="card" style="text-align: center;">
-        <h3>🦦 Хорёк-Связист</h3>
-        <p>Гарантирует стабильность туннелей и бесперебойную работу во всех локациях.</p>
-      </div>
-      <div class="card" style="text-align: center;">
-        <h3>🦡 Барсук-Страж</h3>
-        <p>Обеспечивает железобетонную защиту ваших данных и политику Zero-Logs.</p>
-      </div>
     </div>
   </section>
 
@@ -511,44 +550,64 @@
     </div>
   </section>
 
-  <!-- Тарифы (в одну строку) -->
+  <!-- Тарифы с Хорьком справа -->
   <section class="pricing" id="pricing">
     <h2 class="section-title">Выберите подходящий план</h2>
-    <div class="pricing-grid">
+    <div class="pricing-with-mascot">
+      <div class="pricing-grid">
+        
+        <!-- Карточка 1: 1 месяц -->
+        <div class="pricing-card" onclick="goToPay('1 месяц', 199, 3)">
+          <h3>1 Месяц</h3>
+          <div class="pricing-price">₽199 <span>/ мес</span></div>
+          <ul class="pricing-features">
+            <li>До 3 устройств</li>
+            <li>Большинство локаций</li>
+          </ul>
+        </div>
 
-      <!-- Карточка 1: 1 месяц -->
-      <div class="pricing-card" onclick="goToPay('1 месяц', 199, 3)">
-        <h3>1 Месяц</h3>
-        <div class="pricing-price">₽199 <span>/ мес</span></div>
-        <ul class="pricing-features">
-          <li>До 3 устройств</li>
-          <li>Большинство локаций</li>
-        </ul>
+        <!-- Карточка 2: 3 месяца -->
+        <div class="pricing-card" onclick="goToPay('3 месяца', 350, 5)">
+          <div class="badge" style="margin-bottom: 10px;">Выгоднее</div>
+          <h3>3 Месяца</h3>
+          <div class="pricing-price">₽350 <span>/ мес</span></div>
+          <ul class="pricing-features">
+            <li>До 5 устройств</li>
+            <li>Большинство локаций</li>
+          </ul>
+        </div>
+
+        <!-- Карточка 3: 6 месяцев -->
+        <div class="pricing-card featured" onclick="goToPay('6 месяцев', 800, 10)">
+          <div class="badge" style="margin-bottom: 10px; background: rgba(76,209,55,0.1); color: #4cd137; border-color: rgba(76,209,55,0.3);">Максимум</div>
+          <h3>6 Месяцев</h3>
+          <div class="pricing-price">₽800 <span>/ период</span></div>
+          <ul class="pricing-features">
+            <li>До 10 устройств</li>
+            <li>Все локации и скорость</li>
+          </ul>
+        </div>
+
       </div>
-
-      <!-- Карточка 2: 3 месяца -->
-      <div class="pricing-card" onclick="goToPay('3 месяца', 350, 5)">
-        <div class="badge" style="margin-bottom: 10px;">Выгоднее</div>
-        <h3>3 Месяца</h3>
-        <div class="pricing-price">₽350 <span>/ мес</span></div>
-        <ul class="pricing-features">
-          <li>До 5 устройств</li>
-          <li>Большинство локаций</li>
-        </ul>
+      <div class="pricing-mascot-side">
+        <div class="mascot-card">
+          <img src="ferret.png" alt="Хорёк-Связист">
+          <div class="speech-bubble">«Выбирай любой план, подключайся и лети на максимальной скорости!»</div>
+        </div>
       </div>
-
-      <!-- Карточка 3: 6 месяцев -->
-      <div class="pricing-card featured" onclick="goToPay('6 месяцев', 800, 10)">
-        <div class="badge" style="margin-bottom: 10px; background: rgba(76,209,55,0.1); color: #4cd137; border-color: rgba(76,209,55,0.3);">Максимум</div>
-        <h3>6 Месяцев</h3>
-        <div class="pricing-price">₽800 <span>/ период</span></div>
-        <ul class="pricing-features">
-          <li>До 10 устройств</li>
-          <li>Все локации и скорость</li>
-        </ul>
-      </div>
-
     </div>
+  </section>
+
+  <!-- Поддержка с Барсуком снизу в центре -->
+  <section class="support-section" id="support">
+    <img src="badger.png" alt="Барсук-Страж" class="support-mascot">
+    <h2 class="section-title" style="margin-bottom: 16px;">Остались вопросы?</h2>
+    <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 500px; margin: 0 auto;">
+      В случае каких-то вопросов или проблем смело обращайтесь к нам в официальную поддержку. Мы на связи 24/7!
+    </p>
+    <a href="https://t.me/your_telegram_bot" target="_blank" class="telegram-btn">
+      💬 Написать в Telegram-бот
+    </a>
   </section>
 
   <!-- Модальное окно авторизации/регистрации -->
@@ -557,7 +616,7 @@
       <button class="close-modal" onclick="closeModal()">✕</button>
       <h2 id="modal-heading">Вход в аккаунт</h2>
       <p class="modal-subtitle" id="modal-subtext">Введите ваши данные для входа</p>
-
+      
       <form id="auth-form" onsubmit="handleAuthSubmit(event)">
         <div class="form-group">
           <label>Email</label>
