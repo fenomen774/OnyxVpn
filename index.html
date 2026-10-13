@@ -198,6 +198,9 @@
       align-items: center;
     }
 
+    /* Атрибут hidden должен побеждать display: flex */
+    .auth-buttons-group[hidden] { display: none; }
+
     .user-email {
       color: var(--muted);
       font-size: 0.82rem;
